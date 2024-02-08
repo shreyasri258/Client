@@ -1,5 +1,3 @@
-// Exam.jsx
-
 import React, { useState, useEffect, useRef } from 'react';
 import Timer from "../src/timer/Timer.jsx";
 import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
@@ -8,9 +6,10 @@ import { useLocation } from 'react-router-dom';
 
 const Exam = () => {
     const location = useLocation(); // Use useLocation hook to get location object
-    const { state } = location;
-    const {  duration, formLink } =  state || {};
-    const examTitle = 'Shreya'
+    const params = new URLSearchParams(location.search);
+    const examTitle = params.get("title");
+    const duration = params.get("duration");
+    const formLink = params.get("url");
     const studentID = '1902112'; // Assuming this is a static value
     const studentEmail = 'tusharnankani3@gmail.com';
 
@@ -131,7 +130,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('keydown', keyDownHandler);
         };
-      },[]);
+    }, []);
 
     function captureCheck() {
         let btn = document.querySelector(
