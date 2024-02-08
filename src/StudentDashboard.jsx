@@ -7,6 +7,17 @@ import Typography from "@mui/material/Typography";
 import CreateExamPopup from "./components/CreateExamPopup";
 import { Link } from "react-router-dom";
 
+const openFullScreenExam = (pathname, state) => {
+  const url = new URL(window.location.origin + pathname);
+  const params = new URLSearchParams(state);
+  url.search = params.toString();
+
+  const windowFeatures = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=screen.availWidth,height=screen.availHeight';
+  window.open(url.toString(), '_blank', windowFeatures);
+};
+
+
+
 const StudentDashboard = () => {
   const [value, setValue] = useState(0);
   const [showCreateExamPopup, setShowCreateExamPopup] = useState(false);
@@ -87,11 +98,9 @@ const StudentDashboard = () => {
               Exam Duration: {exam.examDuration}
             </Typography>
             <div style={{ marginLeft: "auto", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
-              <Link to={{ pathname: "/exam", state: exam }} style={{ textDecoration: "none" }}>
-                <Button variant="contained" color="primary" style={{ marginBottom: 8 }}>
-                  Start Test
-                </Button>
-              </Link>
+              <Button variant="contained" color="primary" style={{ marginBottom: 8 }} onClick={() => openFullScreenExam('/exam', exam)}>
+                Start Test
+              </Button>
               <Button variant="contained" color="error" style={{ marginBottom: 8, marginLeft: 8 }} onClick={() => handleDeleteExam(index)}>
                 Delete
               </Button>
