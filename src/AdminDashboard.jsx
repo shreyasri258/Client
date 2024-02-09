@@ -47,6 +47,33 @@ const AdminDashboard = () => {
     localStorage.setItem("examData", JSON.stringify(updatedExamData));
   };
 
+  const handlePostExam = (index) => {
+    // Mark the exam as posted
+    const updatedExamData = [...examData];
+    updatedExamData[index].posted = true;
+    setExamData(updatedExamData);
+    // Update local storage with updated exam data
+    localStorage.setItem("examData", JSON.stringify(updatedExamData));
+  
+    // Add the posted exam to the shared location
+    const postedExam = updatedExamData[index];
+    const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
+    localStorage.setItem("postedExams", JSON.stringify([...postedExams, postedExam]));
+  };
+
+  const handleRemoveExam = (index) => {
+    const updatedExamData = [...examData];
+    updatedExamData.splice(index, 1);
+    setExamData(updatedExamData);
+    localStorage.setItem("examData", JSON.stringify(updatedExamData));
+  
+    // Remove the exam from the shared location
+    const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
+    const filteredPostedExams = postedExams.filter((_, i) => i !== index);
+    localStorage.setItem("postedExams", JSON.stringify(filteredPostedExams));
+  };
+  
+
   return (
     <Card>
       <Tabs
@@ -87,14 +114,15 @@ const AdminDashboard = () => {
               Exam Duration: {exam.examDuration}
             </Typography>
             <div style={{ marginLeft: "auto", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
-              <Link to={{ pathname: "/exam", state: exam }} style={{ textDecoration: "none" }}>
-                <Button variant="contained" color="primary" style={{ marginBottom: 8 }}>
-                  Start Test
+              {exam.posted ? (
+                <Button variant="contained" color="error" style={{ marginBottom: 8 }} onClick={() => handleRemoveExam(index)}>
+                  Remove
                 </Button>
-              </Link>
-              <Button variant="contained" color="error" style={{ marginBottom: 8, marginLeft: 8 }} onClick={() => handleDeleteExam(index)}>
-                Delete
-              </Button>
+              ) : (
+                <Button variant="contained" color="success" style={{ marginBottom: 8 }} onClick={() => handlePostExam(index)}>
+                  Post
+                </Button>
+              )}
             </div>
           </Card>
         ))}

@@ -8,12 +8,21 @@ const Exam = () => {
     const location = useLocation(); // Use useLocation hook to get location object
     const params = new URLSearchParams(location.search);
     const examTitle = params.get("title");
-    const duration = params.get("duration");
+    const duration = parseInt(params.get("duration")); // Parse duration as integer
     const formLink = params.get("url");
     const studentID = '1902112'; // Assuming this is a static value
     const studentEmail = 'tusharnankani3@gmail.com';
 
     const fullscreenRef = useRef(null);
+    const overlayRef = useRef(null);
+    const formBlurRef = useRef(null);
+    const countdownRef = useRef(null);
+
+    const [warningCnt, setWarningCnt] = useState(0);
+    const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(true);
+    const [showMessage, setShowMessage] = useState('');
+    const [timerExpired, setTimerExpired] = useState(false); // State to track timer expiration
 
     const handleFullscreen = () => {
         if (fullscreenRef.current) {
@@ -31,13 +40,21 @@ const Exam = () => {
         }
     };
 
-    const overlayRef = useRef(null);
-    const formBlurRef = useRef(null);
+    useEffect(() => {
+        // Start the countdown timer when the component mounts
+        countdownRef.current = setInterval(() => {
+            setTimerExpired((prevTimerExpired) => {
+                if (prevTimerExpired) {
+                    // Close the exam window when the timer expires
+                    window.close();
+                }
+                return prevTimerExpired;
+            });
+        }, duration * 60 * 1000); // Convert duration to milliseconds
 
-    const [warningCnt, setWarningCnt] = useState(0);
-    const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(true);
-    const [showMessage, setShowMessage] = useState('');
+        // Cleanup function to clear the interval when the component unmounts
+        return () => clearInterval(countdownRef.current);
+    }, [duration]);
 
     useEffect(() => {
         const devToolsChangeHandler = (event) => {
@@ -132,6 +149,31 @@ const Exam = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // Effect to monitor timer expiration
+        if (duration <= 0) {
+            setTimerExpired(true);
+        }
+    }, [duration]);
+
+    useEffect(() => {
+        // Effect to handle page close event
+        const handlePageClose = (event) => {
+            if (duration > 0) {
+                event.preventDefault();
+                event.returnValue = ''; // For some browsers
+                // Redirect to new route
+                window.location.href = '/exam-ended';
+            }
+        };
+
+        window.addEventListener('beforeunload', handlePageClose);
+
+        return () => {
+            window.removeEventListener('beforeunload', handlePageClose);
+        };
+    }, [duration]);
+
     function captureCheck() {
         let btn = document.querySelector(
             '#root > div > div > div.left-column > div.image-capture > button'
@@ -200,8 +242,8 @@ const Exam = () => {
                     <div ref={overlayRef} id="overlay" className={`hide ${isFullScreen ? '' : 'disable'}`}>
                         <h2>Message: {showMessage}</h2>
                         <h2>Warnings: {warningCnt}</h2>
-                        <h1>Exam Terminated</h1>
-                        <h3>Please contact your organization/admin.</h3>
+                        <h1>{timerExpired ? 'Exam Over' : 'Exam Ongoing'}</h1>
+                        <h3>{timerExpired ? 'Time has expired. Please contact your organization/admin.' : ''}</h3>
                     </div>
 
                     <div ref={formBlurRef} id="form-blur" className={`form ${isFullScreen ? '' : 'blur'}`}>

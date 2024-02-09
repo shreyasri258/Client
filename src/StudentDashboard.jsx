@@ -4,8 +4,6 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import CreateExamPopup from "./components/CreateExamPopup";
-import { Link } from "react-router-dom";
 
 const openFullScreenExam = (state) => {
   const url = new URL(window.location.origin + '/exam');
@@ -17,50 +15,17 @@ const openFullScreenExam = (state) => {
   window.open(url.toString(), '_blank', windowFeatures);
 };
 
-
-
 const StudentDashboard = () => {
   const [value, setValue] = useState(0);
-  const [showCreateExamPopup, setShowCreateExamPopup] = useState(false);
-  const [examData, setExamData] = useState(() => {
-    
-    try {
-      
-      const storedData = JSON.parse(localStorage.getItem("examData"));
-      return Array.isArray(storedData) ? storedData : [];
-    } catch (error) {
-      console.error("Error parsing exam data from localStorage:", error);
-      return [];
-    }
-  });
-  
-  // Add more initial exam data as needed
+  const [examData, setExamData] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("examData", JSON.stringify(examData));
-  }, [examData]);
-
-  const handleCreateExamClick = () => {
-    setShowCreateExamPopup(true);
-  };
-
-  const handleCloseCreateExamPopup = () => {
-    setShowCreateExamPopup(false);
-  };
-
-  const handleSubmitCreateExam = (newExam) => {
-    setExamData([...examData, newExam]);
-    handleCloseCreateExamPopup();
-  };
+    const storedPostedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
+    setExamData(storedPostedExams);
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleDeleteExam = (index) => {
-    const updatedExamData = [...examData];
-    updatedExamData.splice(index, 1);
-    setExamData(updatedExamData);
   };
 
   return (
@@ -84,16 +49,7 @@ const StudentDashboard = () => {
             display: "flex",
             justifyContent: "center",
           }}
-          label="Create Exam"
-          onClick={handleCreateExamClick}
-        />
-       <Tab
-          sx={{
-            mx: 12,
-            display: "flex",
-            justifyContent: "center",
-          }}
-          label="History"
+          label="Available Exams"
         />
         <Tab
           sx={{
@@ -111,30 +67,17 @@ const StudentDashboard = () => {
             <Typography variant="h6" gutterBottom>
               {exam.examTitle}
             </Typography>
-            
             <Typography variant="body1" gutterBottom>
               Exam Duration: {`${exam.examDuration} minutes`}
             </Typography>
-            <div style={{ marginLeft: "auto", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
-              <Link >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <Button variant="contained" color="primary" style={{ marginBottom: 8 }} onClick={() => openFullScreenExam(exam)}>
-  Start Test
-</Button>
-              </Link>
-              <Button variant="contained" color="error" style={{ marginBottom: 8, marginLeft: 8 }} onClick={() => handleDeleteExam(index)}>
-                Delete
+                Start Test
               </Button>
             </div>
           </Card>
         ))}
       </div>
-
-      {showCreateExamPopup && (
-        <CreateExamPopup
-          onSubmit={handleSubmitCreateExam}
-          onClose={handleCloseCreateExamPopup}
-        />
-      )}
     </Card>
   );
 };
