@@ -42,18 +42,12 @@ const Exam = () => {
 
     useEffect(() => {
         // Start the countdown timer when the component mounts
-        countdownRef.current = setInterval(() => {
-            setTimerExpired((prevTimerExpired) => {
-                if (prevTimerExpired) {
-                    // Close the exam window when the timer expires
-                    window.close();
-                }
-                return prevTimerExpired;
-            });
+        countdownRef.current = setTimeout(() => {
+            setTimerExpired(true);
         }, duration * 60 * 1000); // Convert duration to milliseconds
 
-        // Cleanup function to clear the interval when the component unmounts
-        return () => clearInterval(countdownRef.current);
+        // Cleanup function to clear the timeout when the component unmounts
+        return () => clearTimeout(countdownRef.current);
     }, [duration]);
 
     useEffect(() => {
@@ -150,13 +144,6 @@ const Exam = () => {
     }, []);
 
     useEffect(() => {
-        // Effect to monitor timer expiration
-        if (duration <= 0) {
-            setTimerExpired(true);
-        }
-    }, [duration]);
-
-    useEffect(() => {
         // Effect to handle page close event
         const handlePageClose = (event) => {
             if (duration > 0) {
@@ -244,6 +231,7 @@ const Exam = () => {
                         <h2>Warnings: {warningCnt}</h2>
                         <h1>{timerExpired ? 'Exam Over' : 'Exam Ongoing'}</h1>
                         <h3>{timerExpired ? 'Time has expired. Please contact your organization/admin.' : ''}</h3>
+                        {timerExpired && <button onClick={() => window.close()}>Close Exam</button>}
                     </div>
 
                     <div ref={formBlurRef} id="form-blur" className={`form ${isFullScreen ? '' : 'blur'}`}>

@@ -10,6 +10,7 @@ import AdminDashboard from './AdminDashboard';
 import StudentDashboard from './StudentDashboard';
 import Exam from './Exam';
 import Landing from './landing/Landing'
+import Instructions from './Instructions';
 
 const App = () => {
  return (
@@ -25,6 +26,7 @@ const App = () => {
                 <Route path="/teacher-login" element={<TeacherLogin />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/student-dashboard" element={<StudentDashboard />} />
+                <Route path="/instructions" element={<Instructions></Instructions>} />
                 <Route path="/exam" element={<Exam />} />
                 <Route path="/exam/:title/:duration/:url" element={<Exam />} /> {/* Dynamic route with parameters */}
             </Routes>
