@@ -24,7 +24,7 @@ const Landing = () => {
 			<div className="section-type landing-page">
 				<div className="landing-content">
 					<div className="headings">
-						<span className="sub-text">Advanced </span>
+						<span className="sub-text">Advanced @</span>
 						<span className="main-heading gradient-text">
 							Proctoring Solution
 						</span>
