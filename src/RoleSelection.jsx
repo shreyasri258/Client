@@ -2,8 +2,6 @@ import React, { useState, useContext } from 'react';
 import { GlobalStateContext } from './GlobalState';
 import { useNavigate } from 'react-router-dom';
 import Button from './components/Button';
-import studentImage from './images/student.jpg';
-import teacherImage from './images/teacher.jpg';
 import { PiStudentFill } from "react-icons/pi";
 import { PiChalkboardTeacherBold } from "react-icons/pi";
 import './css/RoleSelection.css';
@@ -14,9 +12,9 @@ const LoginRegisterPopup = ({navigate , onClose, selectedRole }) => {
   return (
      <div className="popup">
        <div className="popup-inner">
-         <h2>Choose your action</h2>
+         <h2>Choose your action :</h2>
          <Button onClick={() => { navigate(`/login?role=${selectedRole}`); onClose(); }}>Login</Button>
-         <Button onClick={() => { navigate('/register'); onClose(); }}>Register</Button>
+         <Button onClick={() => { navigate(`/register?role=${selectedRole}`); onClose(); }}>Register</Button>
        </div>
      </div>
   );

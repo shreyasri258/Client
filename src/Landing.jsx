@@ -97,9 +97,7 @@ const Landing = () => {
 							<br />
 							What are you waiting for?
 						</p>
-						<a href="/create">
-							<CtaButton text="Create a test" />
-						</a>
+						
 					</div>
 				</div>
 			</div>
