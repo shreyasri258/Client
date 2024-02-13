@@ -24,7 +24,7 @@ const App = () => {
                 <Route path="/role-selection" element={<RoleSelection />} />
                 <Route path="/login-register" element={<LoginRegister />} />
                 <Route path='/register' element={<RegisterHandler/>}/>
-                <Route path="/student-register" element={<UserRegister />} />
+                <Route path="/student-register" element={<StudentRegister />} />
                 <Route path="/teacher-register" element={<AdminRegister />} />
                 <Route path="/login" element={<LoginHandler />} />
                 <Route path="/register" element={<RegisterHandler/ >}/>
