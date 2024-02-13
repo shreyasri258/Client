@@ -1,9 +1,7 @@
 import React from 'react';
-// import logo from './../../assets/logofont.svg';
-//import  Name from './images/Name.png'
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './../../components/navbar/navbar.css';
 import Name from '../../Name.png';
-// import studentImage from '../../';
 
 const NavLinks = () => (
 	<React.Fragment>
@@ -14,7 +12,7 @@ const NavLinks = () => (
 			<a href="/">Product</a>
 		</p>
 		<p>
-			<a href="/">Community</a>
+		<Link to="/role-selection">Login</Link> {/* Replace <a> with <Link> */}
 		</p>
 		<p>
 			<a href="/">Pricing</a>
@@ -22,9 +20,7 @@ const NavLinks = () => (
 		<p>
 			<a href="/">Contact Us</a>
 		</p>
-		<p>
-			<Link to="/login">Login</Link> {/* Replace <a> with <Link> */}
-		</p>
+		
 	</React.Fragment>
 );
 
