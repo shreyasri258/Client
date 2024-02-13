@@ -13,7 +13,7 @@ import StudentDashboard from './StudentDashboard';
 import Exam from './Exam';
 import Landing from './landing/Landing'
 import Instructions from './Instructions';
-import AdminRegister from './AdminRegister';
+
 
 const App = () => {
  return (

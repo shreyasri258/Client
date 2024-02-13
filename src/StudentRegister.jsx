@@ -6,10 +6,10 @@ import CtaButton from './CtaButton';
 
 const inputField =['Email ID', 'Full Name', 'Password', 'College'];
 
-const UserRegister = () => {
+const StudentRegister = () => {
 
  return (
-    <div className="user-register">
+    <div className="student-register">
         <div className="logo">
             <img src={logo} alt="aankh-logo" />
         </div>
@@ -27,4 +27,4 @@ const UserRegister = () => {
 
 };
 
-export default UserRegister;
+export default StudentRegister;
