@@ -18,7 +18,12 @@ const LoginRegister = () => {
  
 
  const handleRegister = () => {
-  navigate('/register');
+ 
+  if (selectedRole === 'student') {
+   navigate('/student-register');
+} else if (selectedRole === 'teacher') {
+   navigate('/teacher-register');
+}
 };
  
 
