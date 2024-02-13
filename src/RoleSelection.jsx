@@ -14,7 +14,7 @@ const LoginRegisterPopup = ({navigate , onClose, selectedRole }) => {
        <div className="popup-inner">
          <h2>Choose your action :</h2>
          <Button onClick={() => { navigate(`/login?role=${selectedRole}`); onClose(); }}>Login</Button>
-         <Button onClick={() => { navigate('/register'); onClose(); }}>Register</Button>
+         <Button onClick={() => { navigate(`/register?role=${selectedRole}`); onClose(); }}>Register</Button>
        </div>
      </div>
   );
