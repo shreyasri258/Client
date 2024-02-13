@@ -8,22 +8,22 @@ import Name from '../../Name.png';
 const NavLinks = () => (
 	<React.Fragment>
 		<p>
-			<a href="/role-selection">Get Started</a>
+			<a href="/">Blog</a>
 		</p>
-		{/* <p>
-			<a href="/">Product</a>
-		</p> */}
 		<p>
-			<a href="/">Login</a>
+			<a href="/">Product</a>
 		</p>
-		 <p>
+		<p>
+			<a href="/">Community</a>
+		</p>
+		<p>
 			<a href="/">Pricing</a>
 		</p>
 		<p>
 			<a href="/">Contact Us</a>
 		</p>
 		<p>
-			<a href="/login">Login</a>
+			<Link to="/login">Login</Link> {/* Replace <a> with <Link> */}
 		</p>
 	</React.Fragment>
 );
