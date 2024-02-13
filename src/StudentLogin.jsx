@@ -24,7 +24,7 @@ const StudentLogin = () => {
         <img src={logo} alt="aankh-logo" />
       </div>
       <div className="login-form">
-        <h1 className="title-heading">Examinee Login</h1>
+        <h1 className="title-heading">User Login</h1>
         <div className="input-fields">
           {inputField.map((item) => (
             <CommonInput placeholderText={item} />
@@ -39,4 +39,3 @@ const StudentLogin = () => {
 };
 
 export default StudentLogin;
- 

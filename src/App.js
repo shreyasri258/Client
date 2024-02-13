@@ -7,13 +7,12 @@ import { GlobalStateProvider } from './GlobalState';
 import StudentLogin from './StudentLogin';
 import TeacherLogin from './TeacherLogin';
 import LoginHandler from './LoginHandler';
-import RegisterHandler from './RegisterHandler';
 import AdminDashboard from './AdminDashboard';
 import StudentDashboard from './StudentDashboard';
 import Exam from './Exam';
 import Landing from './landing/Landing'
 import Instructions from './Instructions';
-import AdminRegister from './AdminRegister';
+
 
 const App = () => {
  return (
@@ -23,11 +22,12 @@ const App = () => {
                 <Route path="/" element={<Landing />} />
                 <Route path="/role-selection" element={<RoleSelection />} />
                 <Route path="/login-register" element={<LoginRegister />} />
-                <Route path='/register' element={<RegisterHandler/>}/>
-                <Route path="/student-register" element={<UserRegister />} />
+
+                <Route path="/register" element={<AdminRegister />} />
+                <Route path="/student-register" element={<StudentRegister />} />
                 <Route path="/teacher-register" element={<AdminRegister />} />
                 <Route path="/login" element={<LoginHandler />} />
-                <Route path="/register" element={<RegisterHandler/ >}/>
+                <Route path="/register" element={<StudentRegister/>}/>
                 <Route path="/student-login" element={<StudentLogin />} />
                 <Route path="/teacher-login" element={<TeacherLogin />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
