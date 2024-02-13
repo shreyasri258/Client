@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import RoleSelection from './RoleSelection';
 import LoginRegister from './LoginRegister';
-import UserRegister from './UserRegister';
+import AdminRegister from './AdminRegister';
+import StudentRegister from './StudentRegister';
 import { GlobalStateProvider } from './GlobalState';
 import StudentLogin from './StudentLogin';
 import TeacherLogin from './TeacherLogin';
@@ -26,6 +27,7 @@ const App = () => {
                 <Route path="/student-register" element={<UserRegister />} />
                 <Route path="/teacher-register" element={<AdminRegister />} />
                 <Route path="/login" element={<LoginHandler />} />
+                <Route path="/register" element={<RegisterHandler/ >}/>
                 <Route path="/student-login" element={<StudentLogin />} />
                 <Route path="/teacher-login" element={<TeacherLogin />} />
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />

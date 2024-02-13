@@ -6,15 +6,15 @@ import Name from '../../Name.png';
 const NavLinks = () => (
 	<React.Fragment>
 		<p>
-			<a href="/">Blog</a>
+			<a href="/role-selection">Get Started</a>
 		</p>
-		<p>
+		{/* <p>
 			<a href="/">Product</a>
-		</p>
+		</p> */}
 		<p>
-			<a href="/">Community</a>
+			<a href="/">Login</a>
 		</p>
-		<p>
+		{/* <p>
 			<a href="/">Pricing</a>
 		</p>
 		<p>

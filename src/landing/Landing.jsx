@@ -24,7 +24,7 @@ const Landing = () => {
 			<div className="section-type landing-page">
 				<div className="landing-content">
 					<div className="headings">
-						<span className="sub-text">Advanced @</span>
+						<span className="sub-text">Advanced </span>
 						<span className="main-heading gradient-text">
 							Proctoring Solution
 						</span>
@@ -37,7 +37,7 @@ const Landing = () => {
 					</p>
 				</div>
 
-				<div className="landing-cta">
+				{/* <div className="landing-cta">
 					<a href="/create">
 						<CtaButton text="Create a test" />
 					</a>
@@ -49,7 +49,7 @@ const Landing = () => {
 							<a href="/exam">Join</a>
 						</span>
 					</div>
-				</div>
+				</div> */}
 
 				<div className="features-content">
 					<div className="curr-heading">
@@ -65,14 +65,14 @@ const Landing = () => {
 						))}
 					</div>
 
-					<div className="mid-cta">
+					{/* <div className="mid-cta">
 						<p className="phew">phew...</p>
 						<a href="/create">
 							<CtaButton />
 						</a>
-					</div>
+					</div> */}
 				</div>
-
+{/* 
 				<div className="final-features">
 					<div className="top-sec">
 						<div className="left-text">
@@ -85,7 +85,7 @@ const Landing = () => {
 						</div>
 						{/* <div className="infinite">
 							<img src={infinite} alt="infinite" />
-						</div> */}
+						</div> 
 
 						<div className="right-text">
 							<h3 className="gradient-text">The best part?</h3>
@@ -93,19 +93,10 @@ const Landing = () => {
 								Live Status on Admin Dashboard
 							</h1>
 						</div>
-					</div>
+						</div> */}
 
-					<div className="mid-cta final-cta">
-						<p className="phew">
-							And it’s <b>free</b>.
-							<br />
-							What are you waiting for?
-						</p>
-						<a href="/create">
-							<CtaButton text="Create a test" />
-						</a>
-					</div>
-				</div>
+					
+				{/* </div> */}
 			</div>
 		</React.Fragment>
 	);
