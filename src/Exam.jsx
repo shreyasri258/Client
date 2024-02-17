@@ -131,7 +131,7 @@ const Exam = () => {
     useEffect(() => {
         // Disable Ctrl+Shift+I and Esc keys
         const keyDownHandler = (event) => {
-            if ((event.ctrlKey && event.shiftKey && event.keyCode === 73) || (event.key === "Escape")) {
+            if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === "Escape")) {
                 event.preventDefault();
             }
         };
@@ -169,7 +169,7 @@ const Exam = () => {
     }
 
     function check() {
-        if (!window.screenTop && !window.screenY && isFullScreen) {
+        if ( isFullScreen) {
             setIsFullScreen(false);
         }
 
