@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './css/UserRegister.css';
-import logo from './images/logo.png';
+import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
 import { Link } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ const AdminRegister = () => {
   return (
     <div className="user-register">
       <div className="logo">
-        <img src={logo} alt="aankh-logo" />
+        <img src={Icon} alt="proctorpal-logo" />
       </div>
       <div className="register-form">
         <h1 className="title-heading">Examiner Register</h1>
