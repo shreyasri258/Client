@@ -147,6 +147,7 @@ const Exam = () => {
     useEffect(() => {
         // Disable Ctrl+Shift+I and Esc keys
         const keyDownHandler = (event) => {
+
             if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === "Escape")) {
                 event.preventDefault();
             }
