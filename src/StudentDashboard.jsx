@@ -22,6 +22,7 @@ const UserDashboard = () => {
 
   const handleStartExam = (exam) => {
     window.location.href = `/instructions?title=${encodeURIComponent(exam.examTitle)}&duration=${encodeURIComponent(exam.examDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
+    //window.Location.href = `/systemcheck?title=${encodeURIComponent(exam.examTitle)}`
   };
 
   return (
