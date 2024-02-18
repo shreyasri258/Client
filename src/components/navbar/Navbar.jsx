@@ -14,12 +14,7 @@ const NavLinks = () => (
 		<p>
 		<Link to="/role-selection">Login</Link> {/* Replace <a> with <Link> */}
 		</p>
-		<p>
-			<a href="/">Pricing</a>
-		</p>
-		<p>
-			<a href="/">Contact Us</a>
-		</p>
+	
 		
 	</React.Fragment>
 );
