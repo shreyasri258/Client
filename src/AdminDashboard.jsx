@@ -5,24 +5,28 @@ import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CreateExamPopup from "./components/CreateExamPopup";
-
+import Modal from "@mui/material/Modal"; // Add this import
+import Box from "@mui/material/Box"; // Add this import
+import IconButton from "@mui/material/IconButton"; // Add this import
+import CloseIcon from "@mui/icons-material/Close"; // Add this import
+import Icon from "./images/Icon.png";
 
 const AdminDashboard = () => {
   const [value, setValue] = useState(0);
   const [showCreateExamPopup, setShowCreateExamPopup] = useState(false);
   const [examData, setExamData] = useState([]);
   const [open, setOpen] = useState(false);
-const [adminDetails, setAdminDetails] = useState({ name: '', email: '' });
+  const [adminDetails, setAdminDetails] = useState({ name: "", email: "" });
 
-const handleOpenDetails = () => {
-  // Set the admin details here. This is just an example.
-  setAdminDetails({ name: 'John Doe', email: 'john.doe@example.com' });
-  setOpen(true);
-};
+  const handleOpenDetails = () => {
+    // Set the admin details here. This is just an example.
+    setAdminDetails({ name: "John Doe", email: "john.doe@example.com" });
+    setOpen(true);
+  };
 
-const handleCloseDetails = () => {
-  setOpen(false);
-};
+  const handleCloseDetails = () => {
+    setOpen(false);
+  };
 
   // Retrieve exam data from local storage on component mount
   useEffect(() => {
@@ -88,15 +92,15 @@ const handleCloseDetails = () => {
     localStorage.setItem("postedExams", JSON.stringify(filteredPostedExams));
   };
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width:  400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow:  24,
-    p:  4,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
   };
 
   return (
@@ -114,9 +118,14 @@ const handleCloseDetails = () => {
         }}
         aria-label="tabs example"
       >
-        <a href="/">
-  <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
-</a>
+        <div>
+          <img
+            src={Icon}
+            alt="Logo"
+            className="logo-image"
+            style={{ maxWidth: "50px", maxHeight: "50px" }}
+          />
+        </div>
         <Tab
           sx={{
             mx: 12,
@@ -127,7 +136,8 @@ const handleCloseDetails = () => {
           onClick={handleCreateExamClick}
         />
         {/* Add other tabs as needed */}
-        <Button onClick={handleOpenDetails}
+        <Button
+          onClick={handleOpenDetails}
           variant="contained"
           color="primary"
           sx={{
@@ -136,40 +146,39 @@ const handleCloseDetails = () => {
             right: 0,
             margin: 1, // Adjust margin as needed
             borderRadius: "15px",
-            boxShadow: '0  4px  8px rgba(0,  0,  0,  0.2)'
+            boxShadow: "0  4px  8px rgba(0,  0,  0,  0.2)",
           }}
         >
           Details
         </Button>
         <Modal
-  open={open}
-  onClose={handleCloseDetails}
-  aria-labelledby="admin-details-modal"
-  aria-describedby="admin-details-description"
->
-  <Box sx={style}>
-    <Typography id="admin-details-modal" variant="h6" component="h2">
-      Admin Details
-    </Typography>
-    <Typography id="admin-details-description" sx={{ mt:  2 }}>
-      Name: {adminDetails.name} <br />
-      Email: {adminDetails.email}
-    </Typography>
-    <IconButton
-    aria-label="close"
-    onClick={handleCloseDetails}
-    sx={{
-      position: 'absolute',
-      right:  8,
-      top:  8,
-      color: (theme) => theme.palette.grey[500],
-    }}
-  >
-    <CloseIcon />
-  </IconButton>
-  </Box>
-</Modal>
-
+          open={open}
+          onClose={handleCloseDetails}
+          aria-labelledby="admin-details-modal"
+          aria-describedby="admin-details-description"
+        >
+          <Box sx={style}>
+            <Typography id="admin-details-modal" variant="h6" component="h2">
+              Admin Details
+            </Typography>
+            <Typography id="admin-details-description" sx={{ mt: 2 }}>
+              Name: {adminDetails.name} <br />
+              Email: {adminDetails.email}
+            </Typography>
+            <IconButton
+              aria-label="close"
+              onClick={handleCloseDetails}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </Modal>
       </Tabs>
 
       <div
