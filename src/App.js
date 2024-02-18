@@ -1,3 +1,29 @@
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import RoleSelection from './RoleSelection';
+import LoginRegister from './LoginRegister';
+import AdminRegister from './AdminRegister';
+import StudentRegister from './StudentRegister';
+import { GlobalStateProvider } from './GlobalState';
+import StudentLogin from './StudentLogin';
+import TeacherLogin from './TeacherLogin';
+import LoginHandler from './LoginHandler';
+import AdminDashboard from './AdminDashboard';
+import StudentDashboard from './StudentDashboard';
+import Exam from './Exam';
+import Landing from './landing/Landing'
+import Instructions from './Instructions';
+import RegisterHandler from './RegisterHandler';
+import { useContext } from "react";
+import { StudentContext } from "./contextCalls/studentContext/StudentContext"
+import { AdminContext } from "./contextCalls/adminContext/AdminContext"
+
+
+
+const App = () => {
+    const { Student } = useContext(StudentContext);
+    const { Admin } = useContext(AdminContext);
+ return (
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,6 +48,7 @@ import RegisterHandler from "./RegisterHandler";
 
 const App = () => {
   return (
+
     <GlobalStateProvider>
       <Router>
         <Routes>

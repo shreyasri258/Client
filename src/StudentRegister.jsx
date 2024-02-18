@@ -1,39 +1,54 @@
-import React, { useState, useRef } from "react";
-import "./css/UserRegister.css";
-import Icon from "./images/Icon.png";
-import CommonInput from "./CommonInput";
-import { Link } from "react-router-dom";
-import Webcam from "react-webcam"; // Import the Webcam component
 
-const inputField = ["Email ID", "Name", "Password", "College"];
+import React, { useState, useRef } from 'react';
+import './css/UserRegister.css';
+import CommonInput from './CommonInput';
+import { Link } from 'react-router-dom';
+import Webcam from 'react-webcam';
+import axios from "axios";
+const inputField = ['email', 'username', 'password', 'institutionName'];
+import Icon from "./images/Icon.png";
+
+
+const inputField = ['email', 'username', 'password', 'institutionName'];
 
 const StudentRegister = () => {
   const [showModal, setShowModal] = useState(false);
-  const [capturedImage, setCapturedImage] = useState(null); // State to store captured image
-  const webcamRef = useRef(null); // Reference to the webcam component
-
-  // Initialize state for each input field
+  const [capturedImage, setCapturedImage] = useState(null);
+  const webcamRef = useRef(null);
+  
+// Initialize state for each input field
   const [inputValues, setInputValues] = useState(inputField.map(() => ""));
 
-  // Function to handle changes to each input field
-  const handleInputChange = (index, value) => {
-    const newInputValues = [...inputValues];
-    newInputValues[index] = value;
-    setInputValues(newInputValues);
-  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    // Access inputValues to get the values of the input fields
+    try {
+      await axios.post("http://localhost:8800/Server/user/register",  inputValues );
+      // history.push("/login");
+    } catch (err) {
+      console.error('Registration error:', err);
+    }
+    console.log('Input field values:', inputValues);
 
+  
+
+  // Function to handle changes to each input field
+  const handleInputChange = (fieldName, event) => {
+    const value= event.target.value;
+    setInputValues(prevValues => ({
+      ...prevValues,
+      [fieldName]: value,
+    }));
+  };
   // Function to check if all input fields are filled
   const allFieldsFilled = inputValues.every((value) => value.trim() !== "");
 
-  const handleRegister = () => {
-    // Your registration logic goes here
-    // After successful registration, show the modal
-    setShowModal(true);
-  };
   const capture = () => {
+
     const imageSrc = webcamRef.current.getScreenshot(); // Capture image from webcam
     setCapturedImage(imageSrc); // Save captured image in base64 format
     webcamRef.current.stream.getTracks().forEach((track) => track.stop()); // Turn off the camera
+
   };
 
   const videoConstraints = {
@@ -50,7 +65,7 @@ const StudentRegister = () => {
       <div className="register-form">
         <h1 className="title-heading">Examinee Register</h1>
         <div className="input-fields">
-          {inputField.map((item, index) => {
+          {inputField.map((item) => {
             let type;
             switch (item) {
               case "Email ID":
@@ -72,18 +87,16 @@ const StudentRegister = () => {
               <CommonInput
                 key={item}
                 placeholderText={item}
-                value={inputValues[index]}
-                onChange={(e) => handleInputChange(index, e.target.value)}
+//                 value={inputValues[index]}
+                onChange={(value) => handleInputChange(item,value)}
                 type={type} // Specify the type for each input field
               />
             );
           })}
         </div>
-        {/* Render the base64 image if available */}
         {capturedImage && <p>Base64 Format: {capturedImage}</p>}
-        {/* Render the webcam component or the button to capture image */}
         {!capturedImage && (
-          <React.Fragment>
+          <>
             <Webcam
               audio={false}
               ref={webcamRef}
@@ -95,9 +108,11 @@ const StudentRegister = () => {
               onUserMedia={() => console.log("user media")}
               minScreenshotHeight={720}
             />
+
             <button onClick={capture}>Capture Image</button>{" "}
             {/* Button to capture image */}
           </React.Fragment>
+
         )}
         <button onClick={handleRegister} disabled={!allFieldsFilled}>
           Register

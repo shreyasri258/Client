@@ -100,7 +100,7 @@ const Exam = () => {
         const captureCheckId = setInterval(() => captureCheck(), 20000);
 
         return () => clearInterval(captureCheckId);
-    }, []);
+    },);
 
     useEffect(() => {
         const visibilityChangeHandler = () => {
@@ -116,7 +116,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('visibilitychange', visibilityChangeHandler);
         };
-    }, []);
+    },);
 
     useEffect(() => {
         const contextMenuHandler = (event) => {
@@ -128,7 +128,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('contextmenu', contextMenuHandler);
         };
-    }, []);
+    },);
 
     useEffect(() => {
         const copyHandler = () => {
@@ -142,7 +142,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('copy', copyHandler);
         };
-    }, []);
+    },);
 
     useEffect(() => {
         // Disable Ctrl+Shift+I and Esc keys
@@ -158,7 +158,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('keydown', keyDownHandler);
         };
-    }, []);
+    },);
 
     useEffect(() => {
         // Effect to handle page close event

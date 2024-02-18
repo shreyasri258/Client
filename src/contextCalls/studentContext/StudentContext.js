@@ -1,4 +1,4 @@
-import AuthReducer from "./AuthReducer";
+import StudentReducer from "./StudentReducer";
 import { createContext, useEffect, useReducer } from "react";
 
 const INITIAL_STATE = {
@@ -7,17 +7,17 @@ const INITIAL_STATE = {
   error: false,
 };
 
-export const AuthContext = createContext(INITIAL_STATE);
+export const StudentContext = createContext(INITIAL_STATE);
 
-export const AuthContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
+export const StudentContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(StudentReducer, INITIAL_STATE);
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(state.user));
   }, [state.user]);
 
   return (
-    <AuthContext.Provider
+    <StudentContext.Provider
       value={{
         user: state.user,
         isFetching: state.isFetching,
@@ -26,6 +26,6 @@ export const AuthContextProvider = ({ children }) => {
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </StudentContext.Provider>
   );
 };
