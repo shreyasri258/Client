@@ -72,11 +72,14 @@ const handleCloseDetails = () => {
     setExamData(updatedExamData);
     // Update local storage with updated exam data
     localStorage.setItem("examData", JSON.stringify(updatedExamData));
-  
+
     // Add the posted exam to the shared location
     const postedExam = updatedExamData[index];
     const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
-    localStorage.setItem("postedExams", JSON.stringify([...postedExams, postedExam]));
+    localStorage.setItem(
+      "postedExams",
+      JSON.stringify([...postedExams, postedExam])
+    );
   };
 
   const handleRemoveExam = (index) => {
@@ -84,7 +87,7 @@ const handleCloseDetails = () => {
     updatedExamData.splice(index, 1);
     setExamData(updatedExamData);
     localStorage.setItem("examData", JSON.stringify(updatedExamData));
-  
+
     // Remove the exam from the shared location
     const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
     const filteredPostedExams = postedExams.filter((_, i) => i !== index);
@@ -183,7 +186,16 @@ const handleCloseDetails = () => {
 </Modal>
       </Tabs>
 
-      <div style={{ position: "fixed", top: "calc(5rem + 10px)", left: 0, right: 0, overflowY: "auto", height: "calc(100% - 5rem - 10px)" }}>
+      <div
+        style={{
+          position: "fixed",
+          top: "calc(5rem + 10px)",
+          left: 0,
+          right: 0,
+          overflowY: "auto",
+          height: "calc(100% - 5rem - 10px)",
+        }}
+      >
         {examData.map((exam, index) => (
           <Card key={index} sx={{ padding: 2, marginTop: 2,marginLeft:4,marginRight:4 , position: "relative" }}>
             <Typography variant="h6" gutterBottom>
