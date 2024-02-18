@@ -1,21 +1,28 @@
 import './css/TeacherLogin.css';
 import Icon from './images/Icon.png';
-import CommonInput from './CommonInput';
-import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
-const inputField = [ 'Name', 'College', 'Email ID', 'Password' ];
+
 
 const TeacherLogin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   let navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [college, setCollege] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleLogin = () => {
-  
       setIsLoggedIn(true);
        navigate("/admin-dashboard");
    
    };
+
+   const isFormValid = name.trim().length > 0 &&
+   college.trim().length > 0 &&
+   email.trim().length > 0 &&
+   password.trim().length > 0;
    
   return (
     <div className="user-login">
@@ -25,13 +32,34 @@ const TeacherLogin = () => {
       <div className="login-form">
         <h1 className="title-heading">Examiner Login</h1>
         <div className="input-fields">
-          {inputField.map((item) => (
-            <CommonInput placeholderText={item} />
-          ))}
+        <input
+          type="text"
+          value={name}
+          placeholder="Name"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          value={college}
+          placeholder="College"
+          onChange={(e) => setCollege(e.target.value)}
+        />
+        <input
+          type="email"
+          value={email}
+          placeholder="Email ID"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          value={password}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
         </div>
-        <a href="/admin-dashboard">
-          <CtaButton text="Login" onClick={handleLogin}/>
-        </a>
+        <div>
+          <button text="Login" onClick={handleLogin} disabled={!isFormValid}>Login</button>
+        </div>
       </div>
     </div>
  );

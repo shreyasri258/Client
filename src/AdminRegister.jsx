@@ -8,6 +8,15 @@ const inputField = ['Email ID', 'Full Name', 'Password', 'College'];
 
 const AdminRegister = () => {
   const [showModal, setShowModal] = useState(false);
+  const [name, setName] = useState("");
+  const [college, setCollege] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const isFormValid = name.trim().length > 0 &&
+   college.trim().length > 0 &&
+   email.trim().length > 0 &&
+   password.trim().length > 0;
 
   const handleRegister = () => {
     // Your registration logic goes here
@@ -23,11 +32,32 @@ const AdminRegister = () => {
       <div className="register-form">
         <h1 className="title-heading">Examiner Register</h1>
         <div className="input-fields">
-          {inputField.map((item) => (
-            <CommonInput key={item} placeholderText={item} />
-          ))}
+        <input
+          type="text"
+          value={name}
+          placeholder="Name"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          type="text"
+          value={college}
+          placeholder="College"
+          onChange={(e) => setCollege(e.target.value)}
+        />
+        <input
+          type="email"
+          value={email}
+          placeholder="Email ID"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          value={password}
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
         </div>
-        <button onClick={handleRegister}>Register</button>
+        <button onClick={handleRegister} disabled={!isFormValid}>Register</button>
       </div>
       {showModal && (
         <div className="modal-overlay">

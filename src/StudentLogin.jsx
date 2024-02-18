@@ -1,8 +1,6 @@
 
 import './css/StudentLogin.css';
 import Icon from './images/Icon.png';
-import CommonInput from './CommonInput';
-import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
 import React, { useState,useRef } from "react";
 import Button from './components/Button';
@@ -23,7 +21,10 @@ const StudentLogin = () => {
    
    };
 
-   const isFormValid = name.trim() !== "" && college.trim() !== "" && email.trim() !== "" && password.trim() !== "";
+   const isFormValid = name.trim().length > 0 &&
+   college.trim().length > 0 &&
+   email.trim().length > 0 &&
+   password.trim().length > 0;
 
  return (
     <div className="user-login">
@@ -58,7 +59,7 @@ const StudentLogin = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         </div>
-          <Button onClick={handleLogin} disabled={!isFormValid}>Login</Button>
+          <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
 
       </div>
     </div>
