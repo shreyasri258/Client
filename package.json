@@ -26,6 +26,7 @@
     "react-webcam": "^7.2.0",
     "socket.io-client": "^4.7.4",
     "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.10.5",
     "url": "^0.11.3",
     "web-vitals": "^2.1.4"
   },
