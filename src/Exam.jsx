@@ -159,7 +159,7 @@ const Exam = () => {
         return () => {
             window.removeEventListener('beforeunload', handlePageClose);
         };
-    }, [duration]);
+    }, [duration]); 
 
     function captureCheck() {
         let btn = document.querySelector(
