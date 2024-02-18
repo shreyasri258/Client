@@ -7,11 +7,11 @@ const Button = ({ isDisabled, onClick, children }) => {
       disabled={isDisabled}
       onClick={onClick}
       style={{
-        padding: '10px',
+        padding: '25px',
         backgroundColor: isDisabled ? '#ccc' : '#007BFF',
         color: '#fff',
         border: 'none',
-        borderRadius: '4px',
+        borderRadius: '30px',
         cursor: isDisabled ? 'not-allowed' : 'pointer',
       }}
     >

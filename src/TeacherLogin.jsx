@@ -1,5 +1,5 @@
 import './css/TeacherLogin.css';
-import logo from './images/logo.png';
+import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
 import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
@@ -41,10 +41,10 @@ const TeacherLogin = () => {
   return (
     <div className="user-login">
       <div className="logo">
-        <img src={logo} alt="aankh-logo" />
+        <img src={Icon} alt="proctorpal-logo" />
       </div>
       <div className="login-form">
-        <h1 className="title-heading">Admin Login</h1>
+        <h1 className="title-heading">Examiner Login</h1>
         <div className="input-fields">
         {inputField.map((item) => (
             <CommonInput

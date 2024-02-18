@@ -3,6 +3,7 @@ import Timer from "../src/timer/Timer.jsx";
 import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
 import '../src/css/Exam.css';
 import { useLocation } from 'react-router-dom';
+import CameraWarningPopup from './CameraWarning.jsx';// Import the CameraWarningPopup component
 
 const Exam = () => {
     const location = useLocation(); // Use useLocation hook to get location object
@@ -17,12 +18,14 @@ const Exam = () => {
     const overlayRef = useRef(null);
     const formBlurRef = useRef(null);
     const countdownRef = useRef(null);
+    const cameraPopupRef = useRef(null); // Reference to the camera popup card
 
     const [warningCnt, setWarningCnt] = useState(0);
     const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(true);
     const [showMessage, setShowMessage] = useState('');
     const [timerExpired, setTimerExpired] = useState(false); // State to track timer expiration
+   // const [isCameraOn, setIsCameraOn] = useState(true); // State to track camera status
 
     const handleFullscreen = () => {
         if (fullscreenRef.current) {
@@ -44,8 +47,21 @@ const Exam = () => {
         // Start the countdown timer when the component mounts
         countdownRef.current = setTimeout(() => {
             setTimerExpired(true);
+            window.close(); // Close the window when the timer expires
         }, duration * 60 * 1000); // Convert duration to milliseconds
 
+        // Cleanup function to clear the timeout when the component unmounts
+        return () => clearTimeout(countdownRef.current);
+    }, [duration]);
+
+   
+    useEffect(() => {
+        // Start the countdown timer when the component mounts
+        countdownRef.current = setTimeout(() => {
+            setTimerExpired(true);
+            window.close(); // Close the window when the timer expires
+        }, duration * 60 * 1000); // Convert duration to milliseconds
+    
         // Cleanup function to clear the timeout when the component unmounts
         return () => clearTimeout(countdownRef.current);
     }, [duration]);
@@ -131,6 +147,7 @@ const Exam = () => {
     useEffect(() => {
         // Disable Ctrl+Shift+I and Esc keys
         const keyDownHandler = (event) => {
+
             if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === "Escape")) {
                 event.preventDefault();
             }
@@ -159,7 +176,7 @@ const Exam = () => {
         return () => {
             window.removeEventListener('beforeunload', handlePageClose);
         };
-    }, [duration]);
+    }, [duration]); 
 
     function captureCheck() {
         let btn = document.querySelector(
@@ -249,6 +266,7 @@ const Exam = () => {
                     <Timer initialMinute={duration} />
                 </div>
             </div>
+            <CameraWarningPopup message={showMessage} />
         </div>
     );
 };

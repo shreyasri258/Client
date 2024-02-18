@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './css/UserRegister.css';
-import logo from './images/logo.png';
+import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
 import { Link } from 'react-router-dom';
 import Webcam from 'react-webcam'; // Import the Webcam component
@@ -37,7 +37,7 @@ const StudentRegister = () => {
   return (
     <div className="user-register">
       <div className="logo">
-        <img src={logo} alt="aankh-logo" />
+        <img src={Icon} alt="proctorpal-logo" />
       </div>
       <div className="register-form">
         <h1 className="title-heading">Student Register</h1>
@@ -65,7 +65,7 @@ const StudentRegister = () => {
             <button onClick={capture}>Capture Image</button> {/* Button to capture image */}
           </React.Fragment>
         )}
-        <button onClick={handleRegister}>Register</button>
+        <button onClick={handleRegister}>Reger</button>
       </div>
       {showModal && (
         <div className="modal-overlay">
