@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CreateExamPopup from "./components/CreateExamPopup";
 import { Link } from "react-router-dom";
+import Icon from '../src/images/Icon.png'
 
 const AdminDashboard = () => {
   const [value, setValue] = useState(0);
@@ -89,6 +90,9 @@ const AdminDashboard = () => {
         }}
         aria-label="tabs example"
       >
+        <a href="/">
+  <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
+</a>
         <Tab
           sx={{
             mx: 12,

@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 import '../src/css/userDashboard.css'; // Import the stylesheet
+import Icon from './images/Icon.png';
 
 const UserDashboard = () => {
   const [value, setValue] = useState(0);
@@ -26,15 +27,20 @@ const UserDashboard = () => {
 
   return (
     <Card>
+      
       <Tabs
         value={value}
         onChange={handleChange}
         className="dashboard-tabs" // Apply className from the stylesheet
         aria-label="tabs example"
       >
+<a href="/">
+  <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
+</a>
         <Tab
           className="dashboard-tab"
           label="Available Exams"
+          
         />
         <Tab
           className="dashboard-tab"
