@@ -5,10 +5,7 @@ import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CreateExamPopup from "./components/CreateExamPopup";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+
 
 const AdminDashboard = () => {
   const [value, setValue] = useState(0);
@@ -117,6 +114,9 @@ const handleCloseDetails = () => {
         }}
         aria-label="tabs example"
       >
+        <a href="/">
+  <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
+</a>
         <Tab
           sx={{
             mx: 12,
