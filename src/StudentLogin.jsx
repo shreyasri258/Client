@@ -1,30 +1,40 @@
 import './css/StudentLogin.css';
 import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
-import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
-import React, { useState,useRef } from "react";
-import Button from './components/Button';
+import React, { useState, useContext } from "react";
+import { StudentContext } from "./contextCalls/studentContext/StudentContext";
+import { login } from "./contextCalls/studentContext/apiCalls";
 
-const inputField = [ 'Name', 'College', 'Email ID', 'Password' ];
+const inputField = ['Email ID', 'Name', 'Password', 'College'];
 
 const StudentLogin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  let navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [college, setCollege] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { dispatch } = useContext(StudentContext);
+  const [inputValues, setInputValues] = useState({});
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleInputChange = (fieldName, value) => {
+    setInputValues(prevValues => ({
+      ...prevValues,
+      [fieldName]: value,
+    }));
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      await login(inputValues, dispatch);
       setIsLoggedIn(true);
-       navigate("/student-dashboard");
+      navigate("/student-dashboard");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-   };
+  const isFormValid = Object.values(inputValues).every(value => value.trim() !== "");
 
-   const isFormValid = name.trim() !== "" && college.trim() !== "" && email.trim() !== "" && password.trim() !== "";
-
- return (
+  return (
     <div className="user-login">
       <div className="logo">
         <img src={Icon} alt="proctorpal-logo" />
@@ -32,35 +42,39 @@ const StudentLogin = () => {
       <div className="login-form">
         <h1 className="title-heading">Examinee Login</h1>
         <div className="input-fields">
-        <input
-          type="text"
-          value={name}
-          placeholder="Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="text"
-          value={college}
-          placeholder="College"
-          onChange={(e) => setCollege(e.target.value)}
-        />
-        <input
-          type="email"
-          value={email}
-          placeholder="Email ID"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          value={password}
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          {inputField.map((item) => {
+            let type;
+            switch (item) {
+              case "Email ID":
+                type = "email";
+                break;
+              case "Name":
+                type = "text";
+                break;
+              case "Password":
+                type = "password";
+                break;
+              case "College":
+                type = "text";
+                break;
+              default:
+                type = "text";
+            }
+            return (
+              <CommonInput
+                key={item}
+                placeholderText={item}
+                value={inputValues[item] || ""}
+                onChange={(value) => handleInputChange(item, value)}
+                type={type}
+              />
+            );
+          })}
         </div>
-          <Button onClick={handleLogin} disabled={!isFormValid}>Login</Button>
-
+        <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
       </div>
     </div>
- );
+  );
 };
+
 export default StudentLogin;
