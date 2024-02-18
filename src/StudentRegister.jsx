@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import './css/UserRegister.css';
-import logo from './images/logo.png';
+import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
 import { Link } from 'react-router-dom';
 import Webcam from 'react-webcam'; // Import the Webcam component
@@ -33,10 +33,10 @@ const StudentRegister = () => {
   return (
     <div className="user-register">
       <div className="logo">
-        <img src={logo} alt="aankh-logo" />
+        <img src={Icon} alt="proctorpal-logo" />
       </div>
       <div className="register-form">
-        <h1 className="title-heading">Student Register</h1>
+        <h1 className="title-heading">Examinee Register</h1>
         <div className="input-fields">
           {inputField.map((item) => (
             <CommonInput key={item} placeholderText={item} />

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from './components/Button';
 import { PiStudentFill } from "react-icons/pi";
 import { PiChalkboardTeacherBold } from "react-icons/pi";
+import Icon from './images/Icon.png';
 import './css/RoleSelection.css';
 import './css/popup.css';
 
@@ -42,6 +43,7 @@ const RoleSelection = () => {
 
  return (
    <div className = "radio">
+    <img src={Icon} alt="Logo" className="logo-image" />
      <h1>Choose your role</h1>
      <p>What best describes you?</p>
      <div className="radio-container">

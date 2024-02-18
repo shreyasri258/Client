@@ -1,6 +1,6 @@
 
 import './css/StudentLogin.css';
-import logo from './images/logo.png';
+import Icon from './images/Icon.png';
 import CommonInput from './CommonInput';
 import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
@@ -21,10 +21,10 @@ const StudentLogin = () => {
  return (
     <div className="user-login">
       <div className="logo">
-        <img src={logo} alt="aankh-logo" />
+        <img src={Icon} alt="proctorpal-logo" />
       </div>
       <div className="login-form">
-        <h1 className="title-heading">User Login</h1>
+        <h1 className="title-heading">Examinee Login</h1>
         <div className="input-fields">
           {inputField.map((item) => (
             <CommonInput placeholderText={item} />
