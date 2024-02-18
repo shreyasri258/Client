@@ -44,6 +44,9 @@ const Instructions = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [isVideoPermissionGranted, setIsVideoPermissionGranted] = useState(false);
   const [isAudioPermissionGranted, setIsAudioPermissionGranted] = useState(false);
+  const [currentOS, setCurrentOS] = useState('');
+  const [isBluetoothEnabled, setIsBluetoothEnabled] = useState(true); // Assume Bluetooth is enabled initially
+  const [connectedDeviceName, setConnectedDeviceName] = useState('');
 
   useEffect(() => {
     // Check for video and audio permissions here
@@ -56,6 +59,30 @@ const Instructions = () => {
         setIsVideoPermissionGranted(false);
         setIsAudioPermissionGranted(false);
       });
+
+    // Get current OS
+    setCurrentOS(navigator.platform);
+
+    // Check Bluetooth status periodically
+    const intervalId = setInterval(() => {
+      navigator.bluetooth.getAvailability()
+        .then((isAvailable) => {
+          setIsBluetoothEnabled(isAvailable);
+        })
+        .catch((error) => {
+          console.error('Bluetooth check error:', error);
+        });
+    }, 5000); // Check every 5 seconds
+
+    // Listen for device connection
+    navigator.bluetooth.addEventListener('deviceconnected', (event) => {
+      const device = event.device;
+      setConnectedDeviceName(device.name);
+    });
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   const handleCheckboxChange = (event) => {
@@ -63,18 +90,18 @@ const Instructions = () => {
   };
 
   const handleStartExam = () => {
-    const url = `/exam?title=${encodeURIComponent(examTitle)}&duration=${encodeURIComponent(examDuration)}&url=${encodeURIComponent(googleFormLink)}`;
-    const windowFeatures = 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,width=screen.availWidth,height=screen.availHeight,left=0,top=0';
-    window.open(url, '_blank', windowFeatures);
+    // Your start exam logic here
   };
 
   return (
     <StyledBox>
       <StyledTitle variant="h4">Instructions for the Exam</StyledTitle>
+      <Typography variant="body1">Current OS: {currentOS}</Typography>
+      
       <StyledList>
         <StyledListItem>Ensure that you are in a quiet and well-lit room for the duration of the exam.</StyledListItem>
         {/* Add more instructions here */}
-        <StyledListItem>Ensure that you are in a quiet and well-lit room for the duration of the exam.</StyledListItem>
+        {/* Add more instructions here */}
         <StyledListItem>Make sure your webcam is positioned to capture your face and surroundings clearly throughout the exam.</StyledListItem>
         <StyledListItem>Close all unnecessary applications, browser tabs, and windows on your computer before starting the exam.</StyledListItem>
         <StyledListItem>Keep your government-issued photo ID ready for identity verification.</StyledListItem>
@@ -84,7 +111,6 @@ const Instructions = () => {
         <StyledListItem>Follow all instructions provided by the proctor or exam supervisor throughout the duration of the exam.</StyledListItem>
         <StyledListItem>If you experience any technical difficulties or interruptions during the exam, notify the proctor immediately.</StyledListItem>
         <StyledListItem>Complete the exam within the allotted time and submit your answers as instructed by the exam guidelines.</StyledListItem>
-    
       </StyledList>
       <Divider />
       <Checkbox

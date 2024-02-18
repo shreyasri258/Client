@@ -1,7 +1,8 @@
 body {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    /* align-items: center; */
+    align-content: center;
     justify-content: center;
     min-height: 100vh;
     background-color: #fafafa;
@@ -19,8 +20,18 @@ body {
     font-size: 1.0em;
    }
    
+   .logo-image {
+    width: 115px; /* Adjust width as needed */
+    /* height: auto; */
+    margin-bottom: 5px; /* Add some margin between the logo and the heading */
+    /* align-items: center; */
+    margin-left: 12em;
+    background-color: #fafafa;
+    
+  }
+
    .radio-container {
-    padding: 80px;
+    padding: 20px;
     margin-left: 10px;
     margin-right: 10px;
     display:flex;
@@ -61,6 +72,7 @@ body {
    .radio-container .radio-box img {
     width: 100px;
     height: auto;
+    
    }
    
    .radio-container .radio-box::before {
@@ -94,7 +106,7 @@ body {
     background-color: blue;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 80px;
     cursor: pointer;
    }
    
