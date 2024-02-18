@@ -1,61 +1,96 @@
-
 import React, { useState, useRef } from 'react';
 import './css/UserRegister.css';
 import CommonInput from './CommonInput';
 import { Link } from 'react-router-dom';
-import Webcam from 'react-webcam';
-import axios from "axios";
-const inputField = ['email', 'username', 'password', 'institutionName'];
 import Icon from "./images/Icon.png";
 
-
-const inputField = ['email', 'username', 'password', 'institutionName'];
+const inputField = ['Email ID', 'Name', 'Password', 'College'];
 
 const StudentRegister = () => {
   const [showModal, setShowModal] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
-  const webcamRef = useRef(null);
-  
-// Initialize state for each input field
-  const [inputValues, setInputValues] = useState(inputField.map(() => ""));
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [inputValues, setInputValues] = useState({
+    'Email ID': '',
+    'Name': '',
+    'Password': '',
+    'College': ''
+  });
 
-  const handleRegister = async (e) => {
+  const startCamera = async () => {
+    const constraints = {
+      video: {
+        facingMode: 'user',
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      }
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    videoRef.current.srcObject = stream;
+  };
+
+  const handleCapture = () => {
+    const context = canvasRef.current.getContext('2d');
+    context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+
+    const image = new Image();
+    image.src = canvasRef.current.toDataURL('image/jpeg');
+    setCapturedImage(image.src);
+
+    detectFace(image);
+  };
+
+  const detectFace = (image) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+  
+    // Wait for the image to load before getting its dimensions
+    image.onload = () => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+  
+      // Draw the image on the canvas
+      context.drawImage(image, 0, 0, image.width, image.height);
+  
+      // Get the image data
+      const imageData = context.getImageData(0, 0, image.width, image.height);
+  
+      // Example: count pixels with non-zero alpha channel as "face detected"
+      let count = 0;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] > 0) {
+          count++;
+        }
+      }
+  
+      if (count > 1000) {
+        console.log('Face detected');
+      } else {
+        console.log('No face detected');
+      }
+    };
+  
+    // Set the image source
+    image.src = capturedImage;
+  };
+  
+  const handleRegister = (e) => {
     e.preventDefault();
-    // Access inputValues to get the values of the input fields
-    try {
-      await axios.post("http://localhost:8800/Server/user/register",  inputValues );
-      // history.push("/login");
-    } catch (err) {
-      console.error('Registration error:', err);
-    }
-    console.log('Input field values:', inputValues);
+    // Handle registration logic here
+    console.log('Registration values:', inputValues);
+    setShowModal(true);
+  };
 
-  
-
-  // Function to handle changes to each input field
-  const handleInputChange = (fieldName, event) => {
-    const value= event.target.value;
+  const handleInputChange = (fieldName, value) => {
     setInputValues(prevValues => ({
       ...prevValues,
       [fieldName]: value,
     }));
   };
-  // Function to check if all input fields are filled
-  const allFieldsFilled = inputValues.every((value) => value.trim() !== "");
 
-  const capture = () => {
-
-    const imageSrc = webcamRef.current.getScreenshot(); // Capture image from webcam
-    setCapturedImage(imageSrc); // Save captured image in base64 format
-    webcamRef.current.stream.getTracks().forEach((track) => track.stop()); // Turn off the camera
-
-  };
-
-  const videoConstraints = {
-    width: 480,
-    height: 360,
-    facingMode: "user",
-  };
+  const allFieldsFilled = Object.values(inputValues).every((value) => value.trim() !== "");
 
   return (
     <div className="user-register">
@@ -87,33 +122,18 @@ const StudentRegister = () => {
               <CommonInput
                 key={item}
                 placeholderText={item}
-//                 value={inputValues[index]}
-                onChange={(value) => handleInputChange(item,value)}
-                type={type} // Specify the type for each input field
+                value={inputValues[item]}
+                onChange={(value) => handleInputChange(item, value)}
+                type={type}
               />
             );
           })}
         </div>
-        {capturedImage && <p>Base64 Format: {capturedImage}</p>}
-        {!capturedImage && (
-          <>
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              className="webcam"
-              videoConstraints={videoConstraints}
-              screenshotQuality={1}
-              onUserMediaError={(err) => console.log(err)}
-              onUserMedia={() => console.log("user media")}
-              minScreenshotHeight={720}
-            />
-
-            <button onClick={capture}>Capture Image</button>{" "}
-            {/* Button to capture image */}
-          </React.Fragment>
-
-        )}
+        {capturedImage && <img src={capturedImage} alt="captured" />}
+        <video ref={videoRef} autoPlay playsInline style={{ display: 'none' }} />
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
+        <button onClick={startCamera}>Start Camera</button>
+        <button onClick={handleCapture}>Capture Image</button>
         <button onClick={handleRegister} disabled={!allFieldsFilled}>
           Register
         </button>
@@ -136,4 +156,5 @@ const StudentRegister = () => {
     </div>
   );
 };
+
 export default StudentRegister;
