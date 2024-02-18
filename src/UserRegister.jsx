@@ -12,10 +12,14 @@ const StudentRegister = () => {
   const [capturedImage, setCapturedImage] = useState(null); // State to store captured image
   const webcamRef = useRef(null); // Reference to the webcam component
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
     // Your registration logic goes here
     // After successful registration, show the modal
     setShowModal(true);
+    try {
+      await axios.post("user/register", { email,username, password });
+      // history.push("/login");
+    } catch (err) {}
   };
 
   const capture = () => {

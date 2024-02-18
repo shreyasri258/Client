@@ -3,11 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {AdminContextProvider } from "./contextCalls/adminContext/AdminContext";
+import { StudentContextProvider } from "./contextCalls/studentContext/StudentContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+     <StudentContextProvider>
+        <AdminContextProvider>
+          <App />
+        </AdminContextProvider>
+      </StudentContextProvider>
   </React.StrictMode>
 );
 

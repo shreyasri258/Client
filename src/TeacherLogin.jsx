@@ -3,18 +3,39 @@ import logo from './images/logo.png';
 import CommonInput from './CommonInput';
 import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AdminContext } from "./contextCalls/adminContext/AdminContext";
+import { login } from "./contextCalls/adminContext/apiCalls";
 
-const inputField = [ 'Name', 'College', 'Email ID', 'Password' ];
+const inputField = ['email', 'adminname', 'password', 'institutionName'];
 
 const TeacherLogin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  let navigate = useNavigate();
-  const handleLogin = () => {
+  const { dispatch } = useContext(AdminContext);
+  const [inputFieldValues, setInputFieldValues] = useState({});
+  // let navigate = useNavigate();
+
+  const handleInputChange = (fieldName, event) => {
+    const value = event.target.value
+    setInputFieldValues(prevValues => ({
+      ...prevValues,
+      [fieldName]: value,
+    }));
+  };
+
+
+  const handleLogin = (e) => {
   
-      setIsLoggedIn(true);
-       navigate("/admin-dashboard");
-   
+    e.preventDefault();
+    // console.log('Input field values:', inputFieldValues);
+    try{
+    login( inputFieldValues , dispatch);
+    setIsLoggedIn(true);
+    } catch(err){
+      console.log(err);
+    }
+      //  navigate("/admin-dashboard");
+      console.log('Input field values:', inputFieldValues);
    };
    
   return (
@@ -25,13 +46,17 @@ const TeacherLogin = () => {
       <div className="login-form">
         <h1 className="title-heading">Admin Login</h1>
         <div className="input-fields">
-          {inputField.map((item) => (
-            <CommonInput placeholderText={item} />
+        {inputField.map((item) => (
+            <CommonInput
+              key={item}
+              placeholderText={item}
+              onChange={(value) => handleInputChange(item, value)}
+            />
           ))}
         </div>
-        <a href="/admin-dashboard">
-          <CtaButton text="Login" onClick={handleLogin}/>
-        </a>
+
+        <button onClick={handleLogin}>Login</button>
+
       </div>
     </div>
  );

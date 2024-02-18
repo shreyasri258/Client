@@ -13,10 +13,15 @@ import Exam from './Exam';
 import Landing from './landing/Landing'
 import Instructions from './Instructions';
 import RegisterHandler from './RegisterHandler';
+import { useContext } from "react";
+import { StudentContext } from "./contextCalls/studentContext/StudentContext"
+import { AdminContext } from "./contextCalls/adminContext/AdminContext"
 
 
 
 const App = () => {
+    const { Student } = useContext(StudentContext);
+    const { Admin } = useContext(AdminContext);
  return (
     <GlobalStateProvider>
         <Router>
