@@ -68,7 +68,7 @@ const UserDashboard = () => {
         className="dashboard-tabs" // Apply className from the stylesheet
         aria-label="tabs example"
       >
-<a href="/">
+<a href="/student-dashboard">
   <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
 </a>
         <Tab
