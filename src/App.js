@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RoleSelection from "./RoleSelection";
 import LoginRegister from "./LoginRegister";
 import AdminRegister from "./AdminRegister";
@@ -18,7 +13,6 @@ import Exam from "./Exam";
 import Landing from "./landing/Landing";
 import Instructions from "./Instructions";
 import RegisterHandler from "./RegisterHandler";
-// import SystemCheck from "./SystemCheck";
 
 const App = () => {
   return (
@@ -36,10 +30,9 @@ const App = () => {
           <Route path="/teacher-login" element={<TeacherLogin />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
-          {/* <Route path="/systemcheck" element={<SystemCheck />} /> */}
-          <Route path="/instructions" element={<Instructions></Instructions>} />
+          <Route path="/instructions" element={<Instructions />} />
           <Route path="/exam" element={<Exam />} />
-          <Route path="/exam/:title/:duration/:url" element={<Exam />} />{" "}
+          <Route path="/exam/:title/:duration/:url" element={<Exam />} />
           {/* Dynamic route with parameters */}
         </Routes>
       </Router>

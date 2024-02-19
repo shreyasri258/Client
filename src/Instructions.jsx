@@ -91,6 +91,35 @@ const Instructions = () => {
 
   const handleStartExam = () => {
     // Your start exam logic here
+    const url = `/exam?title=${encodeURIComponent(examTitle)}&duration=${encodeURIComponent(examDuration)}&url=${encodeURIComponent(googleFormLink)}`;
+    const windowFeatures = 'fullscreen=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,left=0,top=0';
+    const newWindow = window.open(url, '_blank', windowFeatures);
+
+    if (newWindow) {
+        newWindow.moveTo(0, 0);
+        newWindow.resizeTo(window.screen.availWidth, window.screen.availHeight);
+        newWindow.addEventListener('focus', disableMainWindow);
+        newWindow.addEventListener('beforeunload', enableMainWindow);
+        disableWindowOpen();
+    }
+  };
+
+  const disableWindowOpen = () => {
+    window.open = () => null;
+  };
+
+  const enableWindowOpen = () => {
+    window.open = windowOpenBackup;
+  };
+
+  const windowOpenBackup = window.open;
+
+  const disableMainWindow = () => {
+      window.disabled = true;
+  };
+
+  const enableMainWindow = () => {
+      window.disabled = false;
   };
 
   return (

@@ -3,7 +3,7 @@ import Timer from "../src/timer/Timer.jsx";
 import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
 import '../src/css/Exam.css';
 import { useLocation } from 'react-router-dom';
-import CameraWarningPopup from './CameraWarning.jsx';// Import the CameraWarningPopup component
+import Swal from 'sweetalert2'; // Import SweetAlert as Swal
 
 const Exam = () => {
     const location = useLocation(); // Use useLocation hook to get location object
@@ -15,17 +15,12 @@ const Exam = () => {
     const studentEmail = 'tusharnankani3@gmail.com';
 
     const fullscreenRef = useRef(null);
-    const overlayRef = useRef(null);
-    const formBlurRef = useRef(null);
     const countdownRef = useRef(null);
-    const cameraPopupRef = useRef(null); // Reference to the camera popup card
 
     const [warningCnt, setWarningCnt] = useState(0);
     const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(true);
-    const [showMessage, setShowMessage] = useState('');
     const [timerExpired, setTimerExpired] = useState(false); // State to track timer expiration
-   // const [isCameraOn, setIsCameraOn] = useState(true); // State to track camera status
 
     const handleFullscreen = () => {
         if (fullscreenRef.current) {
@@ -54,18 +49,6 @@ const Exam = () => {
         return () => clearTimeout(countdownRef.current);
     }, [duration]);
 
-   
-    useEffect(() => {
-        // Start the countdown timer when the component mounts
-        countdownRef.current = setTimeout(() => {
-            setTimerExpired(true);
-            window.close(); // Close the window when the timer expires
-        }, duration * 60 * 1000); // Convert duration to milliseconds
-    
-        // Cleanup function to clear the timeout when the component unmounts
-        return () => clearTimeout(countdownRef.current);
-    }, [duration]);
-
     useEffect(() => {
         const devToolsChangeHandler = (event) => {
             if (event.detail.isOpen) {
@@ -74,7 +57,11 @@ const Exam = () => {
             }
 
             if (!isDevToolsOpen) {
-                setShowMessage('Your exam will terminate. Please close devtools.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Your exam will terminate. Please close devtools.'
+                });
                 disableForm();
             } else {
                 enableForm();
@@ -91,30 +78,42 @@ const Exam = () => {
     }, [isDevToolsOpen]);
 
     useEffect(() => {
-        const fullScreenCheckId = setInterval(() => check(), 10000);
-
-        return () => clearInterval(fullScreenCheckId);
-    }, [isFullScreen]);
-
-    useEffect(() => {
-        const captureCheckId = setInterval(() => captureCheck(), 20000);
-
-        return () => clearInterval(captureCheckId);
-    }, []);
-
-    useEffect(() => {
-        const visibilityChangeHandler = () => {
-            if (document.hidden) {
+        const keyDownHandler = (event) => {
+            if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === 'F12')) {
+                event.preventDefault();
                 setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
-                setShowMessage('Warning: You switched tabs. Please return to the exam.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Opening developer tools is not allowed during the exam.'
+                });
                 disableForm();
             }
         };
 
-        document.addEventListener('visibilitychange', visibilityChangeHandler);
+        document.addEventListener('keydown', keyDownHandler);
 
         return () => {
-            document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            document.removeEventListener('keydown', keyDownHandler);
+        };
+    }, []);
+
+    useEffect(() => {
+        const copyHandler = (event) => {
+            event.preventDefault();
+            setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Copying content is not allowed during the exam.'
+            });
+            disableForm();
+        };
+
+        document.addEventListener('copy', copyHandler);
+
+        return () => {
+            document.removeEventListener('copy', copyHandler);
         };
     }, []);
 
@@ -131,92 +130,43 @@ const Exam = () => {
     }, []);
 
     useEffect(() => {
-        const copyHandler = () => {
-            setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
-            setShowMessage('Copying content is not allowed during the exam.');
-            disableForm();
-        };
-
-        document.addEventListener('copy', copyHandler);
-
-        return () => {
-            document.removeEventListener('copy', copyHandler);
-        };
-    }, []);
-
-    useEffect(() => {
-        // Disable Ctrl+Shift+I and Esc keys
-        const keyDownHandler = (event) => {
-
-            if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === "Escape")) {
-                event.preventDefault();
+        const visibilityChangeHandler = () => {
+            if (document.hidden) {
+                setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'You switched tabs. Please return to the exam.'
+                });
+                disableForm();
             }
         };
 
-        document.addEventListener('keydown', keyDownHandler);
+        document.addEventListener('visibilitychange', visibilityChangeHandler);
 
         return () => {
-            document.removeEventListener('keydown', keyDownHandler);
+            document.removeEventListener('visibilitychange', visibilityChangeHandler);
         };
     }, []);
-
-    useEffect(() => {
-        // Effect to handle page close event
-        const handlePageClose = (event) => {
-            if (duration > 0) {
-                event.preventDefault();
-                event.returnValue = ''; // For some browsers
-                // Redirect to new route
-                window.location.href = '/exam-ended';
-            }
-        };
-
-        window.addEventListener('beforeunload', handlePageClose);
-
-        return () => {
-            window.removeEventListener('beforeunload', handlePageClose);
-        };
-    }, [duration]); 
-
-    function captureCheck() {
-        let btn = document.querySelector(
-            '#root > div > div > div.left-column > div.image-capture > button'
-        );
-        btn?.click();
-    }
-
-    function check() {
-        if ( isFullScreen) {
-            setIsFullScreen(false);
-        }
-
-        if (!isFullScreen) {
-            setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
-            setShowMessage('Your exam will terminate. Please go to full-screen mode.');
-            disableForm();
-        } else {
-            enableForm();
-        }
-
-        terminateExam();
-    }
 
     function disableForm() {
-        overlayRef.current?.classList.remove('hide');
-        overlayRef.current?.classList.add('disable');
-        formBlurRef.current?.classList.add('blur');
+        // Implement disable form logic here
     }
 
     function enableForm() {
-        overlayRef.current?.classList.add('hide');
-        overlayRef.current?.classList.remove('disable');
-        formBlurRef.current?.classList.remove('blur');
+        // Implement enable form logic here
     }
 
     function terminateExam() {
         if (warningCnt > 5) {
             disableForm();
-            overlayRef.current?.classList.add('terminate');
+            Swal.fire({
+                icon: 'error',
+                title: 'Exam Terminated',
+                text: 'Your exam has been terminated due to multiple warnings.'
+            }).then(() => {
+                setTimeout(() => window.close(), 3000); // Close the window after 3 seconds
+            });
         }
     }
 
@@ -243,15 +193,7 @@ const Exam = () => {
                 </div>
 
                 <div className="embedded-form">
-                    <div ref={overlayRef} id="overlay" className={`hide ${isFullScreen ? '' : 'disable'}`}>
-                        <h2>Message: {showMessage}</h2>
-                        <h2>Warnings: {warningCnt}</h2>
-                        <h1>{timerExpired ? 'Exam Over' : 'Exam Ongoing'}</h1>
-                        <h3>{timerExpired ? 'Time has expired. Please contact your organization/admin.' : ''}</h3>
-                        {timerExpired && <button onClick={() => window.close()}>Close Exam</button>}
-                    </div>
-
-                    <div ref={formBlurRef} id="form-blur" className={`form ${isFullScreen ? '' : 'blur'}`}>
+                    <div id="form-blur" className="form">
                         <h2 className="title-heading">{examTitle}</h2> {/* Render exam title here */}
                         <iframe title={examTitle} className="form-link" src={embeddedFormLink}>
                             Form
@@ -266,7 +208,6 @@ const Exam = () => {
                     <Timer initialMinute={duration} />
                 </div>
             </div>
-            <CameraWarningPopup message={showMessage} />
         </div>
     );
 };
