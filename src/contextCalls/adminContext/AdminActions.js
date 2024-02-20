@@ -1,16 +1,16 @@
-export const loginStart = () => ({
-    type: "LOGIN_START",
-  });
-  export const loginSuccess = (user) => ({
-    type: "LOGIN_SUCCESS",
-    payload: user,
-  });
-  export const loginFailure = () => ({
-    type: "LOGIN_FAILURE",
-  });
-  
-  //logout
-  
-  export const logout = () => ({
-    type: "LOGOUT",
-  });
+export const adminLoginStart = () => ({
+  type: "ADMIN_LOGIN_START",
+});
+
+export const adminLoginSuccess = (admin) => ({
+  type: "ADMIN_LOGIN_SUCCESS",
+  payload: admin,
+});
+
+export const adminLoginFailure = () => ({
+  type: "ADMIN_LOGIN_FAILURE",
+});
+
+export const adminLogout = () => ({
+  type: "ADMIN_LOGOUT",
+});

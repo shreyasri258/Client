@@ -2,7 +2,7 @@ import AdminReducer from "./AdminReducer";
 import { createContext, useEffect, useReducer } from "react";
 
 const INITIAL_STATE = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  admin: JSON.parse(localStorage.getItem("admin")) || null,
   isFetching: false,
   error: false,
 };
@@ -13,13 +13,13 @@ export const AdminContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AdminReducer, INITIAL_STATE);
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.user));
-  }, [state.user]);
+    localStorage.setItem("admin", JSON.stringify(state.admin));
+  }, [state.admin]);
 
   return (
     <AdminContext.Provider
       value={{
-        user: state.user,
+        admin: state.admin,
         isFetching: state.isFetching,
         error: state.error,
         dispatch,

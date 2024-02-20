@@ -6,7 +6,7 @@ import React, { useState, useContext } from "react";
 import { StudentContext } from "./contextCalls/studentContext/StudentContext";
 import { login } from "./contextCalls/studentContext/apiCalls";
 
-const inputField = ['Email ID', 'Name', 'Password', 'College'];
+const inputField = ['email', 'username', 'password', 'institutionName'];
 
 const StudentLogin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,7 +17,7 @@ const StudentLogin = () => {
   const handleInputChange = (fieldName, value) => {
     setInputValues(prevValues => ({
       ...prevValues,
-      [fieldName]: value,
+      [fieldName]: value.target.value,
     }));
   };
 
@@ -32,7 +32,7 @@ const StudentLogin = () => {
     }
   };
 
-  const isFormValid = Object.values(inputValues).every(value => value.trim() !== "");
+  const isFormValid = Object.values(inputValues)//.every(value => value.trim() !== "");
 
   return (
     <div className="user-login">
@@ -45,16 +45,16 @@ const StudentLogin = () => {
           {inputField.map((item) => {
             let type;
             switch (item) {
-              case "Email ID":
+              case "email":
                 type = "email";
                 break;
-              case "Name":
+              case "username":
                 type = "text";
                 break;
-              case "Password":
+              case "password":
                 type = "password";
                 break;
-              case "College":
+              case "institutionName":
                 type = "text";
                 break;
               default:

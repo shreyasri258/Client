@@ -1,12 +1,19 @@
 import axios from "axios";
-import { loginFailure, loginStart, loginSuccess } from "./AdminActions";
+import {
+  adminLoginFailure,
+  adminLoginStart,
+  adminLoginSuccess,
+} from "./AdminActions";
 
 export const login = async (user, dispatch) => {
-  dispatch(loginStart());
+  dispatch(adminLoginStart());
   try {
-    const res = await axios.post("http://localhost:8800/Server/admin/login", user);
-    dispatch(loginSuccess(res.data));
+    const res = await axios.post(
+      "http://localhost:8800/Server/admin/login",
+      user
+    );
+    dispatch(adminLoginSuccess(res.data));
   } catch (err) {
-    dispatch(loginFailure());
+    dispatch(adminLoginFailure());
   }
 };
