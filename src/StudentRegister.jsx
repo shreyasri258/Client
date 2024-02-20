@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './css/UserRegister.css';
 import CommonInput from './CommonInput';
 import { Link } from 'react-router-dom';
 import Icon from "./images/Icon.png";
-
-const inputField = ['Email ID', 'Name', 'Password', 'College'];
+import socketIOClient from 'socket.io-client';
+import axios from 'axios';
+const inputField = ['email', 'username', 'password', 'institutionName'];
 
 const StudentRegister = () => {
   const [showModal, setShowModal] = useState(false);
@@ -12,23 +13,51 @@ const StudentRegister = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [inputValues, setInputValues] = useState({
-    'Email ID': '',
-    'Name': '',
-    'Password': '',
-    'College': ''
+    'email': '',
+    'username': '',
+    'password': '',
+    'institutionName': '',
+    'profilePic' : ''
   });
+  const [socket, setSocket] = useState(null);
+  const [numPeopleDetected, setNumPeopleDetected] = useState(0);
+
+  useEffect(() => {
+    const socket = socketIOClient('http://localhost:8080'); // Change the URL to your server's URL
+    setSocket(socket);
+
+    socket.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    socket.on('result', (data) => {
+      console.log('Server response:', data);
+      setNumPeopleDetected(data.num_people);
+      setInputValues(prevValues => ({
+        ...prevValues,
+        'profilePic': data.image,
+      }));
+    });
+
+    return () => socket.disconnect(); // Cleanup on unmount
+  }, []);
 
   const startCamera = async () => {
-    const constraints = {
-      video: {
-        facingMode: 'user',
-        width: { ideal: 640 },
-        height: { ideal: 480 }
-      }
-    };
-
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    videoRef.current.srcObject = stream;
+    try {
+      const constraints = {
+        video: {
+          facingMode: 'user',
+          width: { ideal: 640 },
+          height: { ideal: 480 }
+        }
+      };
+  
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      videoRef.current.srcObject = stream;
+      videoRef.current.style.display = 'block'; // Show the video element
+    } catch (error) {
+      console.error('Error accessing camera:', error);
+    }
   };
 
   const handleCapture = () => {
@@ -38,47 +67,38 @@ const StudentRegister = () => {
     const image = new Image();
     image.src = canvasRef.current.toDataURL('image/jpeg');
     setCapturedImage(image.src);
+    setInputValues(prevValues => ({
+      ...prevValues,
+      'profilePic': image.src,
+    }));
 
-    detectFace(image);
+    sendImageToServer(image);
   };
 
-  const detectFace = (image) => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-  
-    // Wait for the image to load before getting its dimensions
-    image.onload = () => {
-      canvas.width = image.width;
-      canvas.height = image.height;
-  
-      // Draw the image on the canvas
-      context.drawImage(image, 0, 0, image.width, image.height);
-  
-      // Get the image data
-      const imageData = context.getImageData(0, 0, image.width, image.height);
-  
-      // Example: count pixels with non-zero alpha channel as "face detected"
-      let count = 0;
-      for (let i = 0; i < imageData.data.length; i += 4) {
-        if (imageData.data[i + 3] > 0) {
-          count++;
-        }
-      }
-  
-      if (count > 1000) {
-        console.log('Face detected');
-      } else {
-        console.log('No face detected');
-      }
-    };
-  
-    // Set the image source
-    image.src = capturedImage;
+  const sendImageToServer = (image) => {
+    if (socket) {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = videoRef.current.videoWidth; // Set canvas dimensions to match video
+      canvas.height = videoRef.current.videoHeight;
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const base64Image = canvas.toDataURL('image/jpeg');
+
+      socket.emit('image', { img: base64Image }); // Emit the base64 encoded image to the server
+    }
   };
   
-  const handleRegister = (e) => {
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     // Handle registration logic here
+    try{
+      const response = await axios.post("http://localhost:8800/Server/user/register",inputValues)
+      console.log(JSON.stringify(response));
+    } catch(error){
+      console.log('Registration Failed!', error.message);
+    }
+
     console.log('Registration values:', inputValues);
     setShowModal(true);
   };
@@ -86,11 +106,11 @@ const StudentRegister = () => {
   const handleInputChange = (fieldName, value) => {
     setInputValues(prevValues => ({
       ...prevValues,
-      [fieldName]: value,
+      [fieldName]: value.target.value,
     }));
   };
 
-  const allFieldsFilled = Object.values(inputValues).every((value) => value.trim() !== "");
+  const allFieldsFilled = Object.values(inputValues).every(value => value.trim() !== '');
 
   return (
     <div className="user-register">
@@ -103,16 +123,16 @@ const StudentRegister = () => {
           {inputField.map((item) => {
             let type;
             switch (item) {
-              case "Email ID":
+              case "email":
                 type = "email";
                 break;
-              case "Name":
+              case "username":
                 type = "text";
                 break;
-              case "Password":
+              case "password":
                 type = "password";
                 break;
-              case "College":
+              case "institutionName":
                 type = "text";
                 break;
               default:
@@ -134,9 +154,10 @@ const StudentRegister = () => {
         <canvas ref={canvasRef} style={{ display: 'none' }} />
         <button onClick={startCamera}>Start Camera</button>
         <button onClick={handleCapture}>Capture Image</button>
-        <button onClick={handleRegister} disabled={!allFieldsFilled}>
+        <button onClick={handleRegister} disabled={numPeopleDetected !== 1}>
           Register
         </button>
+        {numPeopleDetected !== 1 && <p>Please ensure only one face is visible</p>}
       </div>
       {showModal && (
         <div className="modal-overlay">

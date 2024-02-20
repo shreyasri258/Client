@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -13,17 +13,21 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import '../src/css/userDashboard.css'; 
+import { AdminContext } from "./contextCalls/adminContext/AdminContext"; // Import 
+
 
 const AdminDashboard = () => {
   const [value, setValue] = useState(0);
   const [showCreateExamPopup, setShowCreateExamPopup] = useState(false);
   const [examData, setExamData] = useState([]);
   const [open, setOpen] = useState(false);
+  const {admin} = useContext(AdminContext);
 const [adminDetails, setAdminDetails] = useState({ name: '', email: '' });
-
+  console.log(JSON.stringify(admin));
 const handleOpenDetails = () => {
   // Set the admin details here. This is just an example.
-  setAdminDetails({ name: 'John Doe', email: 'john.doe@example.com' });
+  setAdminDetails({ name: admin.admin.name , email: admin.admin.email });
+  console.log(adminDetails);
   setOpen(true);
 };
 
