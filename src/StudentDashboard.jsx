@@ -11,7 +11,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import StudentResults from "./StudentResults";// Import the ResultsTab component
+import StudentResults from "./StudentResults"; // Import the ResultsTab component
 import '../src/css/userDashboard.css'; // Import the stylesheet
 
 const UserDashboard = () => {
@@ -56,16 +56,27 @@ const UserDashboard = () => {
 
   return (
     <Card>
+    
+        
+      
       <Tabs
         value={value}
         onChange={handleChange}
         className="dashboard-tabs"
         aria-label="tabs example"
       >
-        <a href="/student-dashboard">
-          <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
-        </a>
-        <Tab className="dashboard-tab" label="Available Exams" />
+        
+         <Tab
+  className="dashboard-tab"
+  icon={
+    <img
+      src={Icon}
+      alt="Available Exams"
+      style={{ maxWidth: '50px', maxHeight: '50px' }}
+    />
+  }
+/>
+<Tab className="dashboard-tab" label="Available Exams" />
         <Tab className="dashboard-tab" label="Results" />
         <Button
           onClick={handleOpenDetails}
@@ -113,7 +124,26 @@ const UserDashboard = () => {
       </Tabs>
 
       <div className="dashboard-content">
-        {value === 1 && (
+        {value === 0 && (
+          <div>
+            {examData.map((exam, index) => (
+              <Card key={index} className="exam-card">
+                <Typography variant="h6" gutterBottom>
+                  {exam.examTitle}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Exam Duration: {`${exam.examDuration} minutes`}
+                </Typography>
+                <div className="button-container">
+                  <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
+                    Start Test
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+         {value === 1 && (
           <div>
             {examData.map((exam, index) => (
               <Card key={index} className="exam-card">
