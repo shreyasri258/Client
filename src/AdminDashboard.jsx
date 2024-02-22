@@ -292,7 +292,7 @@ const handleRemoveExam = async (index) => {
         }}
         aria-label="tabs example"
       >
-        <a href="/">
+        <a href="/admin-dashboard">
   <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
 </a>
         <Tab
