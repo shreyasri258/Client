@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 import '../src/css/userDashboard.css'; // Import the stylesheet
 import Icon from './images/Icon.png';
-
+import axios from 'axios';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -38,14 +38,33 @@ const UserDashboard = () => {
   };
   
   // Retrieve exam data from local storage on component mount
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("examData")) || [];
-    setExamData(storedData);
-  }, []);
+  const fetchExamData = async () => {
+    try {
+      const userDetails = user;
+      const { institution } = userDetails.user.user;
+      const {token}  = userDetails
+      console.log(token)
+      if (!token) {
+        console.error('No token available');
+        return;
+      }
+      const response = await axios.get('http://localhost:8800/exams/exams', {
+        headers: {
+          'x-auth-token': token, // Include the token in header
+        },
+        query: {
+          'institution': institution // institution name as  query params
+        }
+      });
+      console.log(response.data)
+      setExamData(response.data);
+    } catch (error) {
+      console.error('Error fetching exam data:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const storedPostedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
-    setExamData(storedPostedExams);
+    fetchExamData();
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -53,7 +72,7 @@ const UserDashboard = () => {
   };
 
   const handleStartExam = (exam) => {
-    window.location.href = `/instructions?title=${encodeURIComponent(exam.examTitle)}&duration=${encodeURIComponent(exam.examDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
+    window.location.href = `/instructions?title=${encodeURIComponent(exam.title)}&duration=${encodeURIComponent(exam.timeDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
     //window.Location.href = `/systemcheck?title=${encodeURIComponent(exam.examTitle)}`
   };
 
@@ -68,6 +87,7 @@ const UserDashboard = () => {
     boxShadow:  24,
     p:  4,
   };
+  console.log('exams -> ',examData);
   
   return (
     <Card>
@@ -137,10 +157,10 @@ const UserDashboard = () => {
         {examData.map((exam, index) => (
           <Card key={index} className="exam-card">
             <Typography variant="h6" gutterBottom>
-              {exam.examTitle}
+              {exam.title}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Exam Duration: {`${exam.examDuration} minutes`}
+              Exam Duration: {`${exam.timeDuration} minutes`}
             </Typography>
             <div className="button-container">
               <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>

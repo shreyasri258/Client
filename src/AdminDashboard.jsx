@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import CreateExamPopup from "./components/CreateExamPopup";
 import { Link } from "react-router-dom";
 import Icon from '../src/images/Icon.png';
+import axios from 'axios';
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -35,10 +36,40 @@ const handleCloseDetails = () => {
   setOpen(false);
 };
   // Retrieve exam data from local storage on component mount
+  // useEffect(() => {
+  //   const storedData = JSON.parse(localStorage.getItem("examData")) || [];
+  //   setExamData(storedData);
+  // }, []);
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("examData")) || [];
-    setExamData(storedData);
+    fetchExamData();
   }, []);
+
+  // Function to fetch exam data from the server
+  const fetchExamData = async () => {
+    try {
+      // Retrieve the admin's authentication token from local storage
+      const adminData = localStorage.getItem('admin');
+    const  token = JSON.parse(adminData).token;
+      if (!token) {
+        // Handle case where token is not available
+        console.error('No token available');
+        return;
+      }
+      // Send a GET request to fetch exam data from the server
+      const response = await axios.get('http://localhost:8800/exams/admin/exams', {
+        headers: {
+          'x-auth-token': token // Include the admin's authentication token in the request header
+        }
+      });
+      // Update the exam data state with the data fetched from the server
+      console.log('sucessfull fetch -> ', response.data);
+      setExamData(response.data);
+    } catch (error) {
+      console.error('Error fetching exam data:', error);
+    }
+  };
+  
+
 
   const handleCreateExamClick = () => {
     setShowCreateExamPopup(true);
@@ -48,14 +79,60 @@ const handleCloseDetails = () => {
     setShowCreateExamPopup(false);
   };
 
-  const handleSubmitCreateExam = (newExam) => {
-    // Update exam data state
-    setExamData([...examData, newExam]);
-    // Update local storage with new exam data
-    localStorage.setItem("examData", JSON.stringify([...examData, newExam]));
+  // const handleSubmitCreateExam = (newExam) => {
+  //   // Update exam data state
+  //   setExamData([...examData, newExam]);
+  //   // Update local storage with new exam data
+  //   localStorage.setItem("examData", JSON.stringify([...examData, newExam]));
+  //   handleCloseCreateExamPopup();
+  // };
+
+
+  const handleSubmitCreateExam = async (newExam) => {
+    try {
+      // Retrieve the admin's authentication token from local storage
+      const adminDataString = localStorage.getItem('admin');
+      
+      if (!adminDataString) {
+        // Handle case where token is not available
+        console.error('No token available');
+        return;
+      }
+  
+      // Parse the JSON string to get the admin data object
+      const adminData = JSON.parse(adminDataString);
+      
+      // Extract the token from the admin data object
+      const token = adminData.token;
+      console.log(newExam);
+      // Send a POST request to the server to create a new exam
+      const response = await axios.post('http://localhost:8800/exams/admin/exams', {
+        title: newExam.examTitle,
+        timeDuration: newExam.examDuration,
+        googleFormLink: newExam.googleFormLink,
+        postedForStudents : false,
+        admin : admin.admin,
+      }, {
+        headers: {
+          'x-auth-token': token // Include the admin's authentication token in the request header
+        }
+      });
+      
+      // Fetch updated exam data from the server
+      const responseDataArray = Array.isArray(response.data) ? response.data : [response.data];
+      console.log('post response - ', responseDataArray);
+      setExamData(responseDataArray);
+      
+      console.log('Exam created successfully');
+    } catch (error) {
+      console.error('Error creating exam:', error);
+    }
+    
     handleCloseCreateExamPopup();
   };
+  
 
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -69,34 +146,116 @@ const handleCloseDetails = () => {
     localStorage.setItem("examData", JSON.stringify(updatedExamData));
   };
 
-  const handlePostExam = (index) => {
-    // Mark the exam as posted
+  // const handlePostExam = (index) => {
+  //   // Mark the exam as posted
+  //   const updatedExamData = [...examData];
+  //   updatedExamData[index].posted = true;
+  //   setExamData(updatedExamData);
+  //   // Update local storage with updated exam data
+  //   localStorage.setItem("examData", JSON.stringify(updatedExamData));
+
+  //   // Add the posted exam to the shared location
+  //   const postedExam = updatedExamData[index];
+  //   const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
+  //   localStorage.setItem(
+  //     "postedExams",
+  //     JSON.stringify([...postedExams, postedExam])
+  //   );
+  // };
+
+
+const handlePostExam = async (index) => {
+  try {
     const updatedExamData = [...examData];
-    updatedExamData[index].posted = true;
+    updatedExamData[index].postedForStudents = true;
     setExamData(updatedExamData);
-    // Update local storage with updated exam data
-    localStorage.setItem("examData", JSON.stringify(updatedExamData));
 
-    // Add the posted exam to the shared location
-    const postedExam = updatedExamData[index];
-    const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
-    localStorage.setItem(
-      "postedExams",
-      JSON.stringify([...postedExams, postedExam])
+    // Prepare the data to be sent in the request body
+    const requestData = {
+      title: updatedExamData[index].title,
+      timeDuration: updatedExamData[index].timeDuration,
+      googleFormLink: updatedExamData[index].googleFormLink,
+      postedForStudents: true, // Assuming this is the attribute that indicates if the exam is posted for students
+      admin : admin.admin,
+    };
+    const adminDataString = localStorage.getItem('admin');
+      
+      if (!adminDataString) {
+        // Handle case where token is not available
+        console.error('No token available');
+        return;
+      }
+  
+      // Parse the JSON string to get the admin data object
+      const adminData = JSON.parse(adminDataString);
+      
+      // Extract the token from the admin data object
+      const token = adminData.token;
+      console.log('put-token ',token)
+    // Send the PUT request to update the exam on the server
+    const response = await axios.put(
+      `http://localhost:8800/exams/admin/exams/${updatedExamData[index]._id}`,
+      requestData,
+      {
+        headers: {
+          'x-auth-token': token // Include the admin's authentication token in the request header
+        }
+      }
     );
-  };
 
-  const handleRemoveExam = (index) => {
+    // Check if the request was successful
+    if (response.status === 200) {
+      console.log('Exam successfully marked as posted.');
+    } else {
+      console.error('Failed to mark exam as posted.');
+      // Revert the local state changes if the request was not successful
+      setExamData(examData);
+    }
+  } catch (error) {
+    console.error('Error marking exam as posted:', error);
+    // Revert the local state changes if an error occurred
+    setExamData(examData);
+  }
+};
+
+// const handleRemoveExam = (index) => {
+//   const updatedExamData = [...examData];
+//   updatedExamData.splice(index, 1);
+//   setExamData(updatedExamData);
+//   localStorage.setItem("examData", JSON.stringify(updatedExamData));
+
+//   // Remove the exam from the shared location
+//   const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
+//   const filteredPostedExams = postedExams.filter((_, i) => i !== index);
+//   localStorage.setItem("postedExams", JSON.stringify(filteredPostedExams));
+// };
+const handleRemoveExam = async (index) => {
+  try {
+    const adminDataString = localStorage.getItem('admin');
+      if (!adminDataString) {
+        // Handle case where token is not available
+        console.error('No token available');
+        return;
+      }
+      // Parse the JSON string to get the admin data object
+      const adminData = JSON.parse(adminDataString);
+      // Extract the token from the admin data object
+      const token = adminData.token;
+    console.log('examdata-> ',examData[index]);
+    await axios.delete(`http://localhost:8800/exams/admin/exams/${examData[index]._id}`, {
+      headers: {
+        'x-auth-token': token  // Include the admin's authentication token in the request header
+      }
+    });
+    // Update the exam data state to remove the deleted exam
     const updatedExamData = [...examData];
     updatedExamData.splice(index, 1);
     setExamData(updatedExamData);
-    localStorage.setItem("examData", JSON.stringify(updatedExamData));
-
-    // Remove the exam from the shared location
-    const postedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
-    const filteredPostedExams = postedExams.filter((_, i) => i !== index);
-    localStorage.setItem("postedExams", JSON.stringify(filteredPostedExams));
-  };
+  } catch (error) {
+    console.error('Error removing exam:', error);
+    // Handle error, if needed
+  }
+};
   const style = {
     position: 'absolute',
     top: '50%',
@@ -108,7 +267,7 @@ const handleCloseDetails = () => {
     boxShadow:  24,
     p:  4,
   };
-  
+  console.log('the exams are ', examData);
 
   return (
     
@@ -203,16 +362,16 @@ const handleCloseDetails = () => {
         {examData.map((exam, index) => (
           <Card key={index} sx={{ padding: 2, marginTop: 2,marginLeft:4,marginRight:4 , position: "relative" }}>
             <Typography variant="h6" gutterBottom>
-              {exam.examTitle}
+              {exam.title}
             </Typography>
             <Typography variant="body1" gutterBottom>
               Google Form Link: {exam.googleFormLink}
             </Typography>
             <Typography variant="body1" gutterBottom>
-              Exam Duration: {exam.examDuration}
+              Exam Duration: {exam.timeDuration} minutes
             </Typography>
             <div style={{ marginLeft: "auto", display: "flex", flexDirection: "row", alignItems: "flex-start" }}>
-              {exam.posted ? (
+              {exam.postedForStudents ? (
                 <Button variant="contained" color="error" style={{ marginBottom: 8 }} onClick={() => handleRemoveExam(index)}>
                   Remove
                 </Button>

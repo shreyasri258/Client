@@ -40,7 +40,7 @@ const Instructions = () => {
   const examTitle = params.get("title");
   const examDuration = params.get("duration");
   const googleFormLink = params.get("url");
-
+  console.log('params', params.get("title"));
   const [isChecked, setIsChecked] = useState(false);
   const [isVideoPermissionGranted, setIsVideoPermissionGranted] = useState(false);
   const [isAudioPermissionGranted, setIsAudioPermissionGranted] = useState(false);
@@ -82,7 +82,10 @@ const Instructions = () => {
 
     return () => {
       clearInterval(intervalId);
+      enableMainWindow();
+
     };
+    
   }, []);
 
   const handleCheckboxChange = (event) => {
@@ -93,17 +96,29 @@ const Instructions = () => {
     // Your start exam logic here
     const url = `/exam?title=${encodeURIComponent(examTitle)}&duration=${encodeURIComponent(examDuration)}&url=${encodeURIComponent(googleFormLink)}`;
     const windowFeatures = 'fullscreen=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=no,left=0,top=0';
+  
+    // Open the new window
     const newWindow = window.open(url, '_blank', windowFeatures);
-
+  
+    // Check if the new window was successfully opened
     if (newWindow) {
-        newWindow.moveTo(0, 0);
-        newWindow.resizeTo(window.screen.availWidth, window.screen.availHeight);
-        newWindow.addEventListener('focus', disableMainWindow);
-        newWindow.addEventListener('beforeunload', enableMainWindow);
-        disableWindowOpen();
+      // Move and resize the new window
+      newWindow.moveTo(0, 0);
+      newWindow.resizeTo(window.screen.availWidth, window.screen.availHeight);
+  
+      // Listen for the beforeunload event to detect when the new window is closed
+      newWindow.onbeforeunload = () => {
+        enableWindowOpen();
+
+        // Close the main application window so that it can be re-opened by the user
+        disableMainWindow();
+      }
+    } else {
+      // If the new window was blocked by the pop-up blocker, inform the user
+      alert('Please disable your pop-up blocker to start the exam.');
     }
   };
-
+  
   const disableWindowOpen = () => {
     window.open = () => null;
   };
@@ -115,10 +130,13 @@ const Instructions = () => {
   const windowOpenBackup = window.open;
 
   const disableMainWindow = () => {
-      window.disabled = true;
+    window.blur();
+      //window.disabled = true;
   };
 
   const enableMainWindow = () => {
+    window.focus();
+
       window.disabled = false;
   };
 
