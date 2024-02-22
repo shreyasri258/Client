@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -13,24 +13,15 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import StudentResults from "./StudentResults"; // Import the ResultsTab component
 import '../src/css/userDashboard.css'; // Import the stylesheet
-import { StudentContext } from "./contextCalls/studentContext/StudentContext"; // Import StudentContext
 
 const UserDashboard = () => {
   const [value, setValue] = useState(0);
   const [examData, setExamData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [userDetails, setUserDetails] = useState({ name: '', email: '' });
+  const [adminDetails, setAdminDetails] = useState({ name: '', email: '' });
 
-  // Access user details from context
-  const { user } = useContext(StudentContext);
-
-  // Function to open modal and set admin details
   const handleOpenDetails = () => {
-
-    // Set the admin details here. This is just an example.
-    console.log(JSON.stringify(user));
-    setUserDetails({ name: user.user.user.name, email: user.user.user.email });
-    console.log(userDetails)
+    setAdminDetails({ name: 'John Doe', email: 'john.doe@example.com' });
     setOpen(true);
   };
 
@@ -102,19 +93,21 @@ const UserDashboard = () => {
         className="dashboard-tabs"
         aria-label="tabs example"
       >
-
-        <a href="/">
-          <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
-        </a>
-        <Tab
-          className="dashboard-tab"
-          label="Available Exams"
-        />
-        <Tab
-          className="dashboard-tab"
-          label="Results"
-        />
-        <Button onClick={handleOpenDetails}
+        
+         <Tab
+  className="dashboard-tab"
+  icon={
+    <img
+      src={Icon}
+      alt="Available Exams"
+      style={{ maxWidth: '50px', maxHeight: '50px' }}
+    />
+  }
+/>
+<Tab className="dashboard-tab" label="Available Exams" />
+        <Tab className="dashboard-tab" label="Results" />
+        <Button
+          onClick={handleOpenDetails}
           variant="contained"
           color="primary"
           sx={{
@@ -139,9 +132,8 @@ const UserDashboard = () => {
               Admin Details
             </Typography>
             <Typography id="admin-details-description" sx={{ mt:  2 }}>
-
-              Name: {userDetails.name} <br />
-              Email: {userDetails.email}
+              Name: {adminDetails.name} <br />
+              Email: {adminDetails.email}
             </Typography>
             <IconButton
               aria-label="close"
