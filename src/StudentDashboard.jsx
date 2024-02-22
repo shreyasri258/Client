@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
 import Icon from './images/Icon.png';
-
+import axios from 'axios';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -29,9 +29,35 @@ const UserDashboard = () => {
     setOpen(false);
   };
 
+  // Retrieve exam data from local storage on component mount
+  const fetchExamData = async () => {
+    try {
+      const userDetails = user;
+      const { institution } = userDetails.user.user;
+      const {token}  = userDetails
+      console.log(token)
+      if (!token) {
+        console.error('No token available');
+        return;
+      }
+      const response = await axios.get('http://localhost:8800/exams/exams', {
+        headers: {
+          'x-auth-token': token, // Include the token in header
+        },
+        query: {
+          'institution': institution // institution name as  query params
+        }
+      });
+      console.log(response.data)
+      setExamData(response.data);
+    } catch (error) {
+      console.error('Error fetching exam data:', error.message);
+    }
+  };
+
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("examData")) || [];
-    setExamData(storedData);
+    fetchExamData();
+
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -39,7 +65,9 @@ const UserDashboard = () => {
   };
 
   const handleStartExam = (exam) => {
-    window.location.href = `/instructions?title=${encodeURIComponent(exam.examTitle)}&duration=${encodeURIComponent(exam.examDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
+    window.location.href = `/instructions?title=${encodeURIComponent(exam.title)}&duration=${encodeURIComponent(exam.timeDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
+    //window.Location.href = `/systemcheck?title=${encodeURIComponent(exam.examTitle)}`
+
   };
 
   const style = {
@@ -132,7 +160,7 @@ const UserDashboard = () => {
                   {exam.examTitle}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Exam Duration: {`${exam.examDuration} minutes`}
+                  Exam Duration: {`${exam.timeDuration} minutes`}
                 </Typography>
                 <div className="button-container">
                   <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
@@ -151,7 +179,7 @@ const UserDashboard = () => {
                   {exam.examTitle}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Exam Duration: {`${exam.examDuration} minutes`}
+                  Exam Duration: {`${exam.timeDuration} minutes`}
                 </Typography>
                 <div className="button-container">
                   <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
