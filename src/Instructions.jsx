@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
+import Swal from 'sweetalert2'; // Import SweetAlert as Swal
 
 const StyledBox = styled(Box)(({ theme }) => ({
   maxWidth: 800,
@@ -47,6 +48,7 @@ const Instructions = () => {
   const [currentOS, setCurrentOS] = useState('');
   const [isBluetoothEnabled, setIsBluetoothEnabled] = useState(true); // Assume Bluetooth is enabled initially
   const [connectedDeviceName, setConnectedDeviceName] = useState('');
+  const [examStarted, setExamStarted] = useState(false); // State to track if the exam has started
 
   useEffect(() => {
     // Check for video and audio permissions here
@@ -113,6 +115,16 @@ const Instructions = () => {
         // Close the main application window so that it can be re-opened by the user
         disableMainWindow();
       }
+
+      // Disable the button after the exam has started
+      setExamStarted(true);
+
+      // Show a SweetAlert
+      Swal.fire({
+        title: 'Exam Started',
+        text: 'You cannot retake the exam.',
+        icon: 'info',
+      });
     } else {
       // If the new window was blocked by the pop-up blocker, inform the user
       alert('Please disable your pop-up blocker to start the exam.');
@@ -168,7 +180,7 @@ const Instructions = () => {
       <label htmlFor="acknowledgeCheckbox">I acknowledge that I have read and understood the instructions.</label>
       <StyledButton
         onClick={handleStartExam}
-        disabled={!isChecked || !isVideoPermissionGranted || !isAudioPermissionGranted}
+        disabled={!isChecked || !isVideoPermissionGranted || !isAudioPermissionGranted || examStarted}
         variant="contained"
         color="primary"
         fullWidth
