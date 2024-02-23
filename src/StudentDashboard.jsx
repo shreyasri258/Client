@@ -1,51 +1,63 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import '../src/css/userDashboard.css'; // Import the stylesheet
 import Icon from './images/Icon.png';
-
+import axios from 'axios';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
-import { StudentContext } from "./contextCalls/studentContext/StudentContext"; // Import StudentContext
+import StudentResults from "./StudentResults"; // Import the ResultsTab component
+import '../src/css/userDashboard.css'; // Import the stylesheet
 
 const UserDashboard = () => {
   const [value, setValue] = useState(0);
   const [examData, setExamData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [userDetails, setUserDetails] = useState({ name: '', email: '' });
+  const [adminDetails, setAdminDetails] = useState({ name: '', email: '' });
 
-  // Access user details from context
-  const { user } = useContext(StudentContext);
-
-  // Function to open modal and set admin details
   const handleOpenDetails = () => {
-    // Set the admin details here. This is just an example.
-    console.log(JSON.stringify(user));
-    setUserDetails({ name: user.user.user.name, email: user.user.user.email });
-    console.log(userDetails)
+    setAdminDetails({ name: 'John Doe', email: 'john.doe@example.com' });
     setOpen(true);
   };
-  
+
   const handleCloseDetails = () => {
     setOpen(false);
   };
-  
+
   // Retrieve exam data from local storage on component mount
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("examData")) || [];
-    setExamData(storedData);
-  }, []);
+  const fetchExamData = async () => {
+    try {
+      const userDetails = user;
+      const { institution } = userDetails.user.user;
+      const {token}  = userDetails
+      console.log(token)
+      if (!token) {
+        console.error('No token available');
+        return;
+      }
+      const response = await axios.get('http://localhost:8800/exams/exams', {
+        headers: {
+          'x-auth-token': token, // Include the token in header
+        },
+        query: {
+          'institution': institution // institution name as  query params
+        }
+      });
+      console.log(response.data)
+      setExamData(response.data);
+    } catch (error) {
+      console.error('Error fetching exam data:', error.message);
+    }
+  };
 
   useEffect(() => {
-    const storedPostedExams = JSON.parse(localStorage.getItem("postedExams")) || [];
-    setExamData(storedPostedExams);
+    fetchExamData();
+
   }, []);
 
   const handleChange = (event, newValue) => {
@@ -53,8 +65,9 @@ const UserDashboard = () => {
   };
 
   const handleStartExam = (exam) => {
-    window.location.href = `/instructions?title=${encodeURIComponent(exam.examTitle)}&duration=${encodeURIComponent(exam.examDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
+    window.location.href = `/instructions?title=${encodeURIComponent(exam.title)}&duration=${encodeURIComponent(exam.timeDuration)}&url=${encodeURIComponent(exam.googleFormLink)}`;
     //window.Location.href = `/systemcheck?title=${encodeURIComponent(exam.examTitle)}`
+
   };
 
   const style = {
@@ -68,35 +81,40 @@ const UserDashboard = () => {
     boxShadow:  24,
     p:  4,
   };
-  
+
   return (
     <Card>
+    
+        
       
       <Tabs
         value={value}
         onChange={handleChange}
-        className="dashboard-tabs" // Apply className from the stylesheet
+        className="dashboard-tabs"
         aria-label="tabs example"
       >
-        <a href="/">
-          <img src={Icon} alt="Logo" className="logo-image" style={{ maxWidth: '50px', maxHeight: '50px' }} />
-        </a>
-        <Tab
-          className="dashboard-tab"
-          label="Available Exams"
-        />
-        <Tab
-          className="dashboard-tab"
-          label="Results"
-        />
-        <Button onClick={handleOpenDetails}
+        
+         <Tab
+  className="dashboard-tab"
+  icon={
+    <img
+      src={Icon}
+      alt="Available Exams"
+      style={{ maxWidth: '50px', maxHeight: '50px' }}
+    />
+  }
+/>
+<Tab className="dashboard-tab" label="Available Exams" />
+        <Tab className="dashboard-tab" label="Results" />
+        <Button
+          onClick={handleOpenDetails}
           variant="contained"
           color="primary"
           sx={{
             position: "absolute",
             top: 0,
             right: 0,
-            margin: 1, // Adjust margin as needed
+            margin: 1,
             borderRadius: "15px",
             boxShadow: '0  4px  8px rgba(0,  0,  0,  0.2)'
           }}
@@ -114,8 +132,8 @@ const UserDashboard = () => {
               Admin Details
             </Typography>
             <Typography id="admin-details-description" sx={{ mt:  2 }}>
-              Name: {userDetails.name} <br />
-              Email: {userDetails.email}
+              Name: {adminDetails.name} <br />
+              Email: {adminDetails.email}
             </Typography>
             <IconButton
               aria-label="close"
@@ -134,21 +152,45 @@ const UserDashboard = () => {
       </Tabs>
 
       <div className="dashboard-content">
-        {examData.map((exam, index) => (
-          <Card key={index} className="exam-card">
-            <Typography variant="h6" gutterBottom>
-              {exam.examTitle}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Exam Duration: {`${exam.examDuration} minutes`}
-            </Typography>
-            <div className="button-container">
-              <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
-                Start Test
-              </Button>
-            </div>
-          </Card>
-        ))}
+        {value === 0 && (
+          <div>
+            {examData.map((exam, index) => (
+              <Card key={index} className="exam-card">
+                <Typography variant="h6" gutterBottom>
+                  {exam.examTitle}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Exam Duration: {`${exam.timeDuration} minutes`}
+                </Typography>
+                <div className="button-container">
+                  <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
+                    Start Test
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+         {value === 1 && (
+          <div>
+            {examData.map((exam, index) => (
+              <Card key={index} className="exam-card">
+                <Typography variant="h6" gutterBottom>
+                  {exam.examTitle}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Exam Duration: {`${exam.timeDuration} minutes`}
+                </Typography>
+                <div className="button-container">
+                  <Button variant="contained" color="primary" className="start-button" onClick={() => handleStartExam(exam)}>
+                    Start Test
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+        {value === 2 && <StudentResults />}
       </div>
     </Card>
   );

@@ -1,18 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef , useContext} from 'react';
 import Timer from "../src/timer/Timer.jsx";
 import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
 import '../src/css/Exam.css';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'; // Import SweetAlert as Swal
+import { StudentContext } from "./contextCalls/studentContext/StudentContext"; // Import StudentContext
+
 
 const Exam = () => {
+    const { user } = useContext(StudentContext);
+
     const location = useLocation(); // Use useLocation hook to get location object
     const params = new URLSearchParams(location.search);
     const examTitle = params.get("title");
     const duration = parseInt(params.get("duration")); // Parse duration as integer
     const formLink = params.get("url");
-    const studentID = '1902112'; // Assuming this is a static value
-    const studentEmail = 'tusharnankani3@gmail.com';
+    console.log('exam params -> ', examTitle, duration)
+    const studentName = user.user.user.name; // Assuming this is a static value
+    const studentEmail = user.user.user.email;
 
     const fullscreenRef = useRef(null);
     const countdownRef = useRef(null);
@@ -21,6 +26,8 @@ const Exam = () => {
     const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(true);
     const [timerExpired, setTimerExpired] = useState(false); // State to track timer expiration
+    
+
 
     const handleFullscreen = () => {
         if (fullscreenRef.current) {
@@ -186,7 +193,7 @@ const Exam = () => {
                     <div className="exam-details">
                         <h3 className="title-heading">Student Details</h3>
                         <div className="details">
-                            <h4 className="student-id">Student ID: {studentID}</h4>
+                            <h4 className="student-id">Student Name: {studentName}</h4>
                             <h4 className="student-email">Student Email: {studentEmail}</h4>
                         </div>
                     </div>

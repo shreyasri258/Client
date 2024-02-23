@@ -95,6 +95,9 @@ const WebLiveCapture = () => {
   const [error, setError] = useState('');
   const [numPeople, setNumPeople] = useState(0);
   const [socket, setSocket] = useState(null);
+  const [peopleCount, setPeopleCount] = useState(0);
+  const [malpracticesCount, setMalpracticesCount] = useState(0);
+  const [terminateExam, setTerminateExam] = useState(false);
 
   useEffect(() => {
     const socket = socketIOClient('http://localhost:8080');
@@ -133,9 +136,23 @@ const WebLiveCapture = () => {
     if (socket) {
       socket.on('result', (data) => {
         const { status, message, num_people, pose } = data;
-		console.log(data);
+        console.log(data);
         if (status === 'success') {
           setNumPeople(num_people);
+          // Additional logic based on the number of people detected
+          if (num_people > 2) {
+            setPeopleCount(peopleCount => peopleCount + 1);
+            if (peopleCount > 2) {
+              setTerminateExam(true);
+            }
+          } else if (num_people === 0) {
+            setPeopleCount(peopleCount => peopleCount + 1);
+            // if (peopleCount > 10) {
+            //   setTerminateExam(true);
+            // }
+          } else if (num_people !== 1) {
+            setMalpracticesCount(prevCount => prevCount + 1);
+          }
           // Handle pose data if available
           if (pose) {
             // Process pose data here, if needed
@@ -153,13 +170,15 @@ const WebLiveCapture = () => {
         socket.off('result');
       }
     };
-  }, [socket, setNumPeople]);
-  
+  }, [socket, numPeople, peopleCount, setNumPeople, setPeopleCount]);
+
   return (
     <div>
       {error && <div className="error">{error}</div>}
       <div className="content">
         <h1>Number of people detected: {numPeople}</h1>
+        <h2>People Malpractices: {malpracticesCount}</h2>
+        <h2>Terminate Exam: {terminateExam ? 'Yes' : 'No'}</h2>
       </div>
 
       <React.Fragment>
@@ -177,3 +196,4 @@ const WebLiveCapture = () => {
 };
 
 export default WebLiveCapture;
+
