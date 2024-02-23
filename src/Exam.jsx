@@ -8,7 +8,8 @@ import { StudentContext } from "./contextCalls/studentContext/StudentContext"; /
 import TimerComponent from './TimerComp.jsx';
 import LeftColumn from './LeftCol.jsx';
 import EmbeddedForm from './FormComp.jsx';
-
+import Sound from './Sound.wav'
+import Warning from './Warning.wav'
 const Exam = () => {
     const { user } = useContext(StudentContext);
 
@@ -47,6 +48,7 @@ const Exam = () => {
     }, []);
 
     const terminateExam = useCallback(() => {
+        
         if (warningCnt >= 3) {
             disableForm();
             Swal.fire({
@@ -64,10 +66,90 @@ const Exam = () => {
     }, [warningCnt]);
 
     useEffect(() => {
+        let tabSwitchTimer;
+        let fullScreenTimer;
+    
+        const startTabSwitchTimer = () => {
+            tabSwitchTimer = setTimeout(() => {
+                setWarningCnt((warningCnt) => warningCnt + 1);
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: `You switched tabs. Please return to the exam. Warning count: ${warningCnt}`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Return to Fullscreen',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        handleFullscreen();
+                    }
+                });
+                terminateExam(); // Ensure that terminateExam is called
+            }, 5000); // 5 seconds
+        };
+    
+        const startFullScreenTimer = () => {
+            fullScreenTimer = setTimeout(() => {
+                setWarningCnt((warningCnt) => warningCnt + 1);
+                Swal.fire({
+                    title: 'Go back to Fullscreen',
+                    text: `You are not in fullscreen mode. Go back to Full Screen mode. Warning count: ${warningCnt}`,
+                    icon: 'info',
+                    showCancelButton: false,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        handleFullscreen();
+                    }
+                });
+                terminateExam(); // Ensure that terminateExam is called
+            }, 10000); // 10 seconds
+        };
+    
+        const visibilityChangeHandler = () => {
+            if (document.hidden) {
+                startTabSwitchTimer();
+            } else {
+                clearTimeout(tabSwitchTimer);
+            }
+            terminateExam(); // Ensure that terminateExam is called
+        };
+    
         const fullscreenChangeHandler = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                startFullScreenTimer();
+            } else {
+                clearTimeout(fullScreenTimer);
+            }
+            terminateExam(); // Ensure that terminateExam is called
+        };
+    
+        document.addEventListener('visibilitychange', visibilityChangeHandler);
+        document.addEventListener('fullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('webkitfullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('mozfullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('MSFullscreenChange', fullscreenChangeHandler);
+    
+        return () => {
+            document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            document.removeEventListener('fullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('webkitfullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('mozfullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('MSFullscreenChange', fullscreenChangeHandler);
+            clearTimeout(tabSwitchTimer);
+            clearTimeout(fullScreenTimer);
+        };
+    }, [handleFullscreen, warningCnt, terminateExam]);
+    
+
+    useEffect(() => {
+        const fullscreenChangeHandler = () => {
+            const sound = new Audio(Warning);
             setIsFullScreen(!!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement));
             if (!document.fullscreenElement && isFullScreen) {
                 setWarningCnt((warningCnt) => warningCnt + 1);
+                sound.play()
                 Swal.fire({
                     title: 'Go back to Fullscreen',
                     text: `You are not in fullscreen mode.  go back to Full Screen mode Warning count: ${warningCnt}`,
@@ -133,8 +215,10 @@ const Exam = () => {
 
     useEffect(() => {
         const devToolsChangeHandler = (event) => {
+            const sound = new Audio(Warning);
             if (event.detail.isOpen) {
                 setWarningCnt((warningCnt) => warningCnt + 1);
+                sound.play()
                 setIsDevToolsOpen(true);
             }
 
@@ -164,9 +248,11 @@ const Exam = () => {
 
     useEffect(() => {
         const keyDownHandler = (event) => {
+            const sound = new Audio(Warning);
             if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === 'F12')) {
                 event.preventDefault();
                 setWarningCnt((warningCnt) => warningCnt + 1);
+                sound.play();
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
@@ -188,9 +274,11 @@ const Exam = () => {
     
 
     useEffect(() => {
+        const sound = new Audio(Warning);
         const copyHandler = (event) => {
             event.preventDefault();
             setWarningCnt((warningCnt) => warningCnt + 1);
+            sound.play(); // Play the sound effect
             Swal.fire({
                 icon: 'warning',
                 title: 'Warning',
@@ -199,9 +287,9 @@ const Exam = () => {
             disableForm();
             terminateExam(); // Ensure that terminateExam is called
         };
-
+    
         document.addEventListener('copy', copyHandler);
-
+    
         return () => {
             document.removeEventListener('copy', copyHandler);
         };
@@ -221,8 +309,11 @@ const Exam = () => {
 
     useEffect(() => {
         const visibilityChangeHandler = () => {
+            const sound = new Audio(Warning);
+            
             if (document.hidden) {
                 setWarningCnt((warningCnt) => warningCnt + 1);
+                sound.play();
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
