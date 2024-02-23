@@ -7,6 +7,7 @@ import React, { useState, useContext } from "react";
 import { AdminContext } from "./contextCalls/adminContext/AdminContext";
 import { login } from "./contextCalls/adminContext/apiCalls";
 
+
 const inputField = ['email', 'adminname', 'password', 'institutionName'];
 
 const TeacherLogin = () => {
@@ -14,6 +15,7 @@ const TeacherLogin = () => {
   const { dispatch } = useContext(AdminContext);
   const [inputFieldValues, setInputFieldValues] = useState({});
   // let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleInputChange = (fieldName, event) => {
     const value = event.target.value
@@ -31,6 +33,7 @@ const TeacherLogin = () => {
     try{
     login( inputFieldValues , dispatch);
     setIsLoggedIn(true);
+    navigate("/admin-dashboard");
     } catch(err){
       console.log(err);
     }

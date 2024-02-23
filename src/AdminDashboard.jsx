@@ -63,6 +63,7 @@ const handleCloseDetails = () => {
       });
       // Update the exam data state with the data fetched from the server
       console.log('sucessfull fetch -> ', response.data);
+      
       setExamData(response.data);
     } catch (error) {
       console.error('Error fetching exam data:', error);
@@ -121,7 +122,7 @@ const handleCloseDetails = () => {
       // Fetch updated exam data from the server
       const responseDataArray = Array.isArray(response.data) ? response.data : [response.data];
       console.log('post response - ', responseDataArray);
-      setExamData(responseDataArray);
+      setExamData([...examData, ...responseDataArray]);
       
       console.log('Exam created successfully');
     } catch (error) {

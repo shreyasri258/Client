@@ -165,7 +165,7 @@ const UserDashboard = () => {
             {examData.map((exam, index) => (
               <Card key={index} className="exam-card">
                 <Typography variant="h6" gutterBottom>
-                  {exam.examTitle}
+                  {exam.title}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   Exam Duration: {`${exam.timeDuration} minutes`}
@@ -184,7 +184,7 @@ const UserDashboard = () => {
             {examData.map((exam, index) => (
               <Card key={index} className="exam-card">
                 <Typography variant="h6" gutterBottom>
-                  {exam.examTitle}
+                  {exam.title}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                   Exam Duration: {`${exam.timeDuration} minutes`}
