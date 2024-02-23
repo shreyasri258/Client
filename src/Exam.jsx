@@ -380,7 +380,7 @@ const Exam = () => {
     return (
         <div className="exam-wrapper">
              <Watermark studentName={studentName} studentEmail={studentEmail}/>
-            <button className='fullscreen-button' onClick={handleFullscreen}>Make Fullscreen</button>
+            {/* <button className='fullscreen-button' onClick={handleFullscreen}>Make Fullscreen</button> */}
             <div ref={fullscreenRef}></div>
             <div className="exam-container">
                 <LeftColumn studentName={studentName} studentEmail={studentEmail} />
