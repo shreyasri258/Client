@@ -133,3 +133,8 @@
 		left: 20px; /* Adjust as needed */
 	  
 }
+
+.my-popup-class {
+    width: 1200px; /* Set the width to your desired value */
+    height: 600px; /* Set the height to your desired value */
+}

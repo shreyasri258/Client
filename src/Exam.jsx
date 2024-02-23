@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef , useContext} from 'react';
+import React, { useState, useEffect, useRef , useContext, useCallback } from 'react';
 import Timer from "../src/timer/Timer.jsx";
 import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
 import '../src/css/Exam.css';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'; // Import SweetAlert as Swal
 import { StudentContext } from "./contextCalls/studentContext/StudentContext"; // Import StudentContext
-
+import TimerComponent from './TimerComp.jsx';
+import LeftColumn from './LeftCol.jsx';
+import EmbeddedForm from './FormComp.jsx';
 
 const Exam = () => {
     const { user } = useContext(StudentContext);
@@ -24,12 +26,11 @@ const Exam = () => {
 
     const [warningCnt, setWarningCnt] = useState(0);
     const [isDevToolsOpen, setIsDevToolsOpen] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(true);
+    const [isFullScreen, setIsFullScreen] = useState(false);
     const [timerExpired, setTimerExpired] = useState(false); // State to track timer expiration
-    
+    const [fullscreenAlertShown, setFullscreenAlertShown] = useState(false); // State to track if fullscreen alert has been shown
 
-
-    const handleFullscreen = () => {
+    const handleFullscreen = useCallback(() => {
         if (fullscreenRef.current) {
             const element = document.documentElement;
 
@@ -43,7 +44,81 @@ const Exam = () => {
                 element.msRequestFullscreen();
             }
         }
-    };
+    }, []);
+
+    const terminateExam = useCallback(() => {
+        if (warningCnt >= 3) {
+            disableForm();
+            Swal.fire({
+                icon: 'error',
+                title: 'Exam Terminated',
+                text: 'Your exam has been terminated due to multiple warnings.',
+                showCancelButton: false,
+                confirmButtonText: 'Go back to dashboard'
+            }).then(() => {
+                // Redirect or navigate to the dashboard
+                // Example redirect:
+                window.close() // Adjust the URL as needed
+            });
+        }
+    }, [warningCnt]);
+
+    useEffect(() => {
+        const fullscreenChangeHandler = () => {
+            setIsFullScreen(!!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement));
+            if (!document.fullscreenElement && isFullScreen) {
+                setWarningCnt((warningCnt) => warningCnt + 1);
+                Swal.fire({
+                    title: 'Go back to Fullscreen',
+                    text: `You are not in fullscreen mode.  go back to Full Screen mode Warning count: ${warningCnt}`,
+                    icon: 'info',
+                    showCancelButton: false,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        handleFullscreen();
+                    }
+                });
+            }
+            terminateExam()
+        };
+    
+        document.addEventListener('fullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('webkitfullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('mozfullscreenchange', fullscreenChangeHandler);
+        document.addEventListener('MSFullscreenChange', fullscreenChangeHandler);
+    
+        return () => {
+            document.removeEventListener('fullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('webkitfullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('mozfullscreenchange', fullscreenChangeHandler);
+            document.removeEventListener('MSFullscreenChange', fullscreenChangeHandler);
+        };
+    }, [isFullScreen, handleFullscreen, warningCnt,terminateExam]);
+
+    useEffect(() => {
+        if (!isFullScreen && !fullscreenAlertShown) {
+            Swal.fire({
+                title: 'Enter Fullscreen',
+                text: `You have to enter fullscreen mode`,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonText: 'Make FullScreen',
+                
+                customClass: {
+                    popup: 'my-popup-class',
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    handleFullscreen();
+                    setFullscreenAlertShown(true);
+                }
+            });
+        }
+    }, [isFullScreen, fullscreenAlertShown, handleFullscreen]);
+
+  
 
     useEffect(() => {
         // Start the countdown timer when the component mounts
@@ -59,7 +134,7 @@ const Exam = () => {
     useEffect(() => {
         const devToolsChangeHandler = (event) => {
             if (event.detail.isOpen) {
-                setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+                setWarningCnt((warningCnt) => warningCnt + 1);
                 setIsDevToolsOpen(true);
             }
 
@@ -67,7 +142,7 @@ const Exam = () => {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
-                    text: 'Your exam will terminate. Please close devtools.'
+                    text: `Your exam will terminate. Please close devtools.Warning count: ${warningCnt}`
                 });
                 disableForm();
             } else {
@@ -82,19 +157,23 @@ const Exam = () => {
         return () => {
             window.removeEventListener('devtoolschange', devToolsChangeHandler);
         };
-    }, [isDevToolsOpen]);
+    }, [isDevToolsOpen,warningCnt,terminateExam]);
+
+    
+
 
     useEffect(() => {
         const keyDownHandler = (event) => {
             if ((event.ctrlKey && event.shiftKey && event.key === 'I') || (event.key === 'F12')) {
                 event.preventDefault();
-                setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+                setWarningCnt((warningCnt) => warningCnt + 1);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
-                    text: 'Opening developer tools is not allowed during the exam.'
+                    text: `Opening developer tools is not allowed during the exam.Warning count: ${warningCnt}`
                 });
                 disableForm();
+                terminateExam();
             }
         };
 
@@ -103,18 +182,22 @@ const Exam = () => {
         return () => {
             document.removeEventListener('keydown', keyDownHandler);
         };
-    }, []);
+    }, [warningCnt]);
+
+    
+    
 
     useEffect(() => {
         const copyHandler = (event) => {
             event.preventDefault();
-            setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+            setWarningCnt((warningCnt) => warningCnt + 1);
             Swal.fire({
                 icon: 'warning',
                 title: 'Warning',
-                text: 'Copying content is not allowed during the exam.'
+                text: `Copying content is not allowed during the exam.Warning count: ${warningCnt}`
             });
             disableForm();
+            terminateExam(); // Ensure that terminateExam is called
         };
 
         document.addEventListener('copy', copyHandler);
@@ -122,7 +205,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('copy', copyHandler);
         };
-    }, []);
+    }, [warningCnt,terminateExam]);
 
     useEffect(() => {
         const contextMenuHandler = (event) => {
@@ -139,14 +222,21 @@ const Exam = () => {
     useEffect(() => {
         const visibilityChangeHandler = () => {
             if (document.hidden) {
-                setWarningCnt((prevWarningCnt) => prevWarningCnt + 1);
+                setWarningCnt((warningCnt) => warningCnt + 1);
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
-                    text: 'You switched tabs. Please return to the exam.'
+                    text: `You switched tabs. Please return to the exam.Warning count: ${warningCnt}`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Return to Fullscreen',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        handleFullscreen();
+                    }
                 });
-                disableForm();
             }
+            terminateExam(); // Ensure that terminateExam is called
         };
 
         document.addEventListener('visibilitychange', visibilityChangeHandler);
@@ -154,8 +244,7 @@ const Exam = () => {
         return () => {
             document.removeEventListener('visibilitychange', visibilityChangeHandler);
         };
-    }, []);
-
+    }, [warningCnt,terminateExam]);
     function disableForm() {
         // Implement disable form logic here
     }
@@ -164,57 +253,24 @@ const Exam = () => {
         // Implement enable form logic here
     }
 
-    function terminateExam() {
-        if (warningCnt > 5) {
-            disableForm();
-            Swal.fire({
-                icon: 'error',
-                title: 'Exam Terminated',
-                text: 'Your exam has been terminated due to multiple warnings.'
-            }).then(() => {
-                setTimeout(() => window.close(), 3000); // Close the window after 3 seconds
-            });
-        }
-    }
+    
+    
+    
 
     // TO EMBED
     let embeddedFormLink = formLink + '?embedded=true';
 
     return (
         <div className="exam-wrapper">
+             <div className="exam-wrapper">
             <button className='fullscreen-button' onClick={handleFullscreen}>Make Fullscreen</button>
             <div ref={fullscreenRef}></div>
             <div className="exam-container">
-
-                <div className="left-column">
-                    <div className="image-capture">
-                        <WebLiveCapture />
-                    </div>
-                    <div className="exam-details">
-                        <h3 className="title-heading">Student Details</h3>
-                        <div className="details">
-                            <h4 className="student-id">Student Name: {studentName}</h4>
-                            <h4 className="student-email">Student Email: {studentEmail}</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="embedded-form">
-                    <div id="form-blur" className="form">
-                        <h2 className="title-heading">{examTitle}</h2> {/* Render exam title here */}
-                        <iframe title={examTitle} className="form-link" src={embeddedFormLink}>
-                            Form
-                        </iframe>
-                        <div className="responsive-message">
-                            <h1>Please join via a Laptop/PC for the best performance</h1>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="timer">
-                    <Timer initialMinute={duration} />
-                </div>
+                <LeftColumn studentName={studentName} studentEmail={studentEmail} />
+                <EmbeddedForm embeddedFormLink={embeddedFormLink} examTitle={examTitle} />
+                <TimerComponent duration={duration} setTimerExpired={setTimerExpired} />
             </div>
+        </div>
         </div>
     );
 };
