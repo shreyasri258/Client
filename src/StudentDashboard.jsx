@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -13,15 +13,17 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import StudentResults from "./StudentResults"; // Import the ResultsTab component
 import '../src/css/userDashboard.css'; // Import the stylesheet
+import {StudentContext} from './contextCalls/studentContext/StudentContext'
 
 const UserDashboard = () => {
   const [value, setValue] = useState(0);
   const [examData, setExamData] = useState([]);
   const [open, setOpen] = useState(false);
+  const {user} = useContext(StudentContext);
   const [adminDetails, setAdminDetails] = useState({ name: '', email: '' });
 
   const handleOpenDetails = () => {
-    setAdminDetails({ name: 'John Doe', email: 'john.doe@example.com' });
+    setAdminDetails({ name: user.user.user.name, email: user.user.user.email });
     setOpen(true);
   };
 
