@@ -10,6 +10,8 @@ import LeftColumn from './LeftCol.jsx';
 import EmbeddedForm from './FormComp.jsx';
 import Sound from './Sound.wav'
 import Warning from './Warning.wav'
+import Watermark from './Watermark.jsx';
+
 const Exam = () => {
     const { user } = useContext(StudentContext);
 
@@ -56,7 +58,10 @@ const Exam = () => {
                 title: 'Exam Terminated',
                 text: 'Your exam has been terminated due to multiple warnings.',
                 showCancelButton: false,
-                confirmButtonText: 'Go back to dashboard'
+                confirmButtonText: 'Go back to dashboard',
+                customClass: {
+                    popup: 'my-popup-class',
+                },
             }).then(() => {
                 // Redirect or navigate to the dashboard
                 // Example redirect:
@@ -78,7 +83,10 @@ const Exam = () => {
                     text: `You switched tabs. Please return to the exam. Warning count: ${warningCnt}`,
                     showCancelButton: true,
                     confirmButtonText: 'Return to Fullscreen',
-                    cancelButtonText: 'Cancel'
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         handleFullscreen();
@@ -98,6 +106,9 @@ const Exam = () => {
                     showCancelButton: false,
                     confirmButtonText: 'Yes',
                     cancelButtonText: 'No',
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         handleFullscreen();
@@ -157,6 +168,9 @@ const Exam = () => {
                     showCancelButton: false,
                     confirmButtonText: 'Yes',
                     cancelButtonText: 'No',
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         handleFullscreen();
@@ -226,7 +240,10 @@ const Exam = () => {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
-                    text: `Your exam will terminate. Please close devtools.Warning count: ${warningCnt}`
+                    text: `Your exam will terminate. Please close devtools.Warning count: ${warningCnt}`,
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 });
                 disableForm();
             } else {
@@ -256,7 +273,10 @@ const Exam = () => {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Warning',
-                    text: `Opening developer tools is not allowed during the exam.Warning count: ${warningCnt}`
+                    text: `Opening developer tools is not allowed during the exam.Warning count: ${warningCnt}`,
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 });
                 disableForm();
                 terminateExam();
@@ -282,7 +302,10 @@ const Exam = () => {
             Swal.fire({
                 icon: 'warning',
                 title: 'Warning',
-                text: `Copying content is not allowed during the exam.Warning count: ${warningCnt}`
+                text: `Copying content is not allowed during the exam.Warning count: ${warningCnt}`,
+                customClass: {
+                    popup: 'my-popup-class',
+                },
             });
             disableForm();
             terminateExam(); // Ensure that terminateExam is called
@@ -320,7 +343,10 @@ const Exam = () => {
                     text: `You switched tabs. Please return to the exam.Warning count: ${warningCnt}`,
                     showCancelButton: true,
                     confirmButtonText: 'Return to Fullscreen',
-                    cancelButtonText: 'Cancel'
+                    cancelButtonText: 'Cancel',
+                    customClass: {
+                        popup: 'my-popup-class',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         handleFullscreen();
@@ -353,7 +379,7 @@ const Exam = () => {
 
     return (
         <div className="exam-wrapper">
-             <div className="exam-wrapper">
+             <Watermark studentName={studentName} studentEmail={studentEmail}/>
             <button className='fullscreen-button' onClick={handleFullscreen}>Make Fullscreen</button>
             <div ref={fullscreenRef}></div>
             <div className="exam-container">
@@ -362,7 +388,7 @@ const Exam = () => {
                 <TimerComponent duration={duration} setTimerExpired={setTimerExpired} />
             </div>
         </div>
-        </div>
+        
     );
 };
 
