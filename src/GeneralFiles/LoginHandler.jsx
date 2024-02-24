@@ -1,21 +1,22 @@
 import { useLocation } from 'react-router-dom';
-import StudentRegister from './StudentRegister';
-import AdminRegister from './AdminRegister';
-const RegisterHandler = () => {
+import StudentLogin from '../User/StudentLogin';
+import TeacherLogin from '../Admin/TeacherLogin';
+
+const LoginHandler = () => {
  const location = useLocation();
  const urlParams = new URLSearchParams(location.search);
  const role = urlParams.get('role');
 
  switch (role) {
     case 'student':
-      return <StudentRegister />;
+      return <StudentLogin />;
     case 'teacher':
-      return <AdminRegister />;
+      return <TeacherLogin />;
     default:
       return null;
  }
 };
 
 
-export default RegisterHandler;
+export default LoginHandler;
 

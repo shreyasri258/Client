@@ -1,11 +1,11 @@
-import './css/TeacherLogin.css';
-import Icon from './images/Icon.png';
-import CommonInput from './CommonInput';
-import CtaButton from './CtaButton';
+import '../css/TeacherLogin.css';
+import Icon from '../images/Icon.png';
+import CommonInput from '../GeneralFiles/CommonInput';
+// import CtaButton from './CtaButton';
 import { useNavigate } from "react-router-dom";
 import React, { useState, useContext } from "react";
-import { AdminContext } from "./contextCalls/adminContext/AdminContext";
-import { login } from "./contextCalls/adminContext/apiCalls";
+import { AdminContext } from "../contextCalls/adminContext/AdminContext";
+import { login } from "../contextCalls/adminContext/apiCalls";
 
 
 const inputField = ['email', 'adminname', 'password', 'institutionName'];

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef , useContext, useCallback } from 'react';
-import Timer from "../src/timer/Timer.jsx";
-import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
-import '../src/css/Exam.css';
+// import Timer from "../src/timer/Timer.jsx";
+// import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
+import '../css/Exam.css';
 import { useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2'; // Import SweetAlert as Swal
-import { StudentContext } from "./contextCalls/studentContext/StudentContext"; // Import StudentContext
-import TimerComponent from './TimerComp.jsx';
-import LeftColumn from './LeftCol.jsx';
-import EmbeddedForm from './FormComp.jsx';
-import Sound from './Sound.wav'
-import Warning from './Warning.wav'
-import Watermark from './Watermark.jsx';
+import { StudentContext } from "../contextCalls/studentContext/StudentContext"; // Import StudentContext
+import TimerComponent from '../ExamChecks/TimerComp.jsx';
+import LeftColumn from '../ExamChecks/LeftCol.jsx';
+import EmbeddedForm from '../ExamChecks/FormComp.jsx';
+// import Sound from './Sound.wav'
+import Warning from '../ExamChecks/Warning.wav'
+import Watermark from '../ExamChecks/Watermark.jsx';
 
 const Exam = () => {
     const { user } = useContext(StudentContext);

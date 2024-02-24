@@ -1,8 +1,8 @@
 import React from 'react';
-import CommonInput from './CommonInput';
-import CtaButton from './CtaButton';
-import infinite from './images/infinite.svg';
-import './css/Landing.css';
+import CommonInput from '../GeneralFiles/CommonInput';
+import CtaButton from '../GeneralFiles/CtaButton';
+import infinite from '../images/infinite.svg';
+import '../css/Landing.css';
 
 
 const featureList = [

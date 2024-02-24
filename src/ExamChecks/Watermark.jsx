@@ -1,5 +1,5 @@
 import React from 'react';
-import './watermark.css'
+import '../ExamChecks/watermark.css'
 
 const Watermark = ({ studentName, studentEmail }) => {
     const renderWatermark = () => {

@@ -1,18 +1,18 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RoleSelection from "./RoleSelection";
-import LoginRegister from "./LoginRegister";
-import AdminRegister from "./AdminRegister";
-import StudentRegister from "./StudentRegister";
+import RoleSelection from "./GeneralFiles/RoleSelection";
+import LoginRegister from "./GeneralFiles/LoginRegister";
+import AdminRegister from "./Admin/AdminRegister";
+import StudentRegister from "./User/StudentRegister";
 import { GlobalStateProvider } from "./GlobalState";
-import StudentLogin from "./StudentLogin";
-import TeacherLogin from "./TeacherLogin";
-import LoginHandler from "./LoginHandler";
-import AdminDashboard from "./AdminDashboard";
-import StudentDashboard from "./StudentDashboard";
-import Exam from "./Exam";
+import StudentLogin from "./User/StudentLogin";
+import TeacherLogin from "./Admin/TeacherLogin";
+import LoginHandler from "./GeneralFiles/LoginHandler";
+import AdminDashboard from "./Admin/AdminDashboard";
+import StudentDashboard from "./User/StudentDashboard";
+import Exam from "./ExamChecks/Exam";
 import Landing from "./landing/Landing";
-import Instructions from "./Instructions";
-import RegisterHandler from "./RegisterHandler";
+import Instructions from "./User/Instructions";
+import RegisterHandler from "./GeneralFiles/RegisterHandler";
 
 const App = () => {
   return (

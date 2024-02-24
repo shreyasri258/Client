@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/commoninput.css';
+import '../css/commoninput.css';
 
 const CommonInput = ({
   placeholderText = 'Input',

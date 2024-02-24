@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './css/UserRegister.css';
-import Icon from './images/Icon.png';
-import CommonInput from './CommonInput';
+import '../css/UserRegister.css';
+import Icon from '../images/Icon.png';
+import CommonInput from '../GeneralFiles/CommonInput';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 const inputField = ['email', 'adminname', 'password', 'institutionName'];

@@ -4,17 +4,17 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import CreateExamPopup from "./components/CreateExamPopup";
+import CreateExamPopup from "../components/CreateExamPopup";
 import { Link } from "react-router-dom";
-import Icon from '../src/images/Icon.png';
+import Icon from '../images/Icon.png';
 import axios from 'axios';
 
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import '../src/css/userDashboard.css'; 
-import { AdminContext } from "./contextCalls/adminContext/AdminContext"; // Import 
+import '../css/userDashboard.css'; 
+import { AdminContext } from "../contextCalls/adminContext/AdminContext"; // Import 
 
 
 const AdminDashboard = () => {

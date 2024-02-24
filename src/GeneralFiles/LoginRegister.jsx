@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import Button from './components/Button';
+import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
-import { GlobalStateContext } from './GlobalState';
-import './css/LoginRegister.css';
+import { GlobalStateContext } from '../GlobalState';
+import '../css/LoginRegister.css';
 
 const LoginRegister = () => {
  const { selectedRole } = useContext(GlobalStateContext);

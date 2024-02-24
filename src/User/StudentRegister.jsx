@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './css/UserRegister.css';
-import CommonInput from './CommonInput';
+import '../css/UserRegister.css';
+import CommonInput from '../GeneralFiles/CommonInput';
 import { Link } from 'react-router-dom';
-import Icon from "./images/Icon.png";
+import Icon from "../images/Icon.png";
 import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 const inputField = ['email', 'username', 'password', 'institutionName'];

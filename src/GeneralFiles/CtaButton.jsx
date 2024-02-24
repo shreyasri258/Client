@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/ctabutton.css';
+import '../css/ctabutton.css';
 
 const CtaButton = ({ text = 'Get Started' }) => {
 	return <button className="ctabutton">{text}</button>;

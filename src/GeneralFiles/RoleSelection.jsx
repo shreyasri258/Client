@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { GlobalStateContext } from './GlobalState';
+import { GlobalStateContext } from '../GlobalState';
 import { useNavigate } from 'react-router-dom';
-import Button from './components/Button';
+import Button from '../components/Button';
 import { PiStudentFill } from "react-icons/pi";
 import { PiChalkboardTeacherBold } from "react-icons/pi";
-import Icon from './images/Icon.png';
-import './css/RoleSelection.css';
-import './css/popup.css';
+import Icon from '../images/Icon.png';
+import '../css/RoleSelection.css';
+import '../css/popup.css';
 
 // Define the LoginRegisterPopup component
 const LoginRegisterPopup = ({navigate , onClose, selectedRole }) => {

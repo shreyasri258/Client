@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Timer from "../src/timer/Timer.jsx";
+import Timer from "../timer/Timer";
 
 const TimerComponent = ({ duration, setTimerExpired }) => {
     const countdownRef = useRef(null);

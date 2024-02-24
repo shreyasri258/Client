@@ -1,5 +1,5 @@
 import React from 'react';
-import WebLiveCapture from '../src/weblivecapture/WebLiveCapture.jsx';
+import WebLiveCapture from '../weblivecapture/WebLiveCapture';
 
 const LeftColumn = ({ studentName, studentEmail }) => (
     <div className="left-column">

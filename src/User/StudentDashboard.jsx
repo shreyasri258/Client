@@ -5,15 +5,15 @@ import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import Icon from './images/Icon.png';
+import Icon from '../images/Icon.png';
 import axios from 'axios';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import StudentResults from "./StudentResults"; // Import the ResultsTab component
-import '../src/css/userDashboard.css'; // Import the stylesheet
-import {StudentContext} from './contextCalls/studentContext/StudentContext'
+import '../css/userDashboard.css'; // Import the stylesheet
+import {StudentContext} from '../contextCalls/studentContext/StudentContext'
 
 const UserDashboard = () => {
   const [value, setValue] = useState(0);

@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 
-import CtaButton from '../CtaButton';
-import CommonInput from '../CommonInput';
+import CtaButton from '../GeneralFiles/CtaButton';
+import CommonInput from '../GeneralFiles/CommonInput';
 import Navbar from '../components/navbar/Navbar';
 //import infinite from './../../assets/infinite.svg';
 

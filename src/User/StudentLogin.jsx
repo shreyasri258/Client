@@ -1,10 +1,10 @@
-import './css/StudentLogin.css';
-import Icon from './images/Icon.png';
-import CommonInput from './CommonInput';
+import '../css/StudentLogin.css';
+import Icon from '../images/Icon.png';
+import CommonInput from '../GeneralFiles/CommonInput';
 import { useNavigate } from "react-router-dom";
 import React, { useState, useContext } from "react";
-import { StudentContext } from "./contextCalls/studentContext/StudentContext";
-import { login } from "./contextCalls/studentContext/apiCalls";
+import { StudentContext } from "../contextCalls/studentContext/StudentContext";
+import { login } from "../contextCalls/studentContext/apiCalls";
 
 const inputField = ['email', 'username', 'password', 'institutionName'];
 

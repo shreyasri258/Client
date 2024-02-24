@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Webcam from 'react-webcam';
-import './css/webcamcapture.css';
+import '../css/webcamcapture.css';
 
 const videoConstraints = {
 	width: 1280,
